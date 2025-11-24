@@ -1,0 +1,305 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\ContractRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ContractRepository::class)]
+class Contract
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column]
+    private ?int $status = null;
+
+    #[ORM\Column]
+    private ?bool $deplacement = null;
+
+    #[ORM\Column]
+    private ?bool $transportFeeTaken = null;
+
+    #[ORM\Column]
+    private ?bool $lunchTaken = null;
+
+    #[ORM\Column]
+    private ?bool $hostTaken = null;
+
+    #[ORM\Column]
+    private ?bool $bonus = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $workHours = null;
+
+    #[ORM\Column(length: 8000)]
+    private ?string $plannedActivities = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $sharingToken = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $tokenExpDate = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pdfUnsigned = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $pdfSigned = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contracts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Student $student = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contracts')]
+    private ?Tutor $tutor = null;
+
+    #[ORM\ManyToOne(inversedBy: 'contracts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Session $session = null;
+
+    /**
+     * @var Collection<int, ContractDate>
+     */
+    #[ORM\OneToMany(targetEntity: ContractDate::class, mappedBy: 'contract', orphanRemoval: true)]
+    private Collection $contractDates;
+
+    #[ORM\ManyToOne(inversedBy: 'contracts')]
+    private ?Organisation $organisation = null;
+
+    public function __construct()
+    {
+        $this->contractDates = new ArrayCollection();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function isDeplacement(): ?bool
+    {
+        return $this->deplacement;
+    }
+
+    public function setDeplacement(bool $deplacement): static
+    {
+        $this->deplacement = $deplacement;
+
+        return $this;
+    }
+
+    public function isTransportFeeTaken(): ?bool
+    {
+        return $this->transportFeeTaken;
+    }
+
+    public function setTransportFeeTaken(bool $transportFeeTaken): static
+    {
+        $this->transportFeeTaken = $transportFeeTaken;
+
+        return $this;
+    }
+
+    public function isLunchTaken(): ?bool
+    {
+        return $this->lunchTaken;
+    }
+
+    public function setLunchTaken(bool $lunchTaken): static
+    {
+        $this->lunchTaken = $lunchTaken;
+
+        return $this;
+    }
+
+    public function isHostTaken(): ?bool
+    {
+        return $this->hostTaken;
+    }
+
+    public function setHostTaken(bool $hostTaken): static
+    {
+        $this->hostTaken = $hostTaken;
+
+        return $this;
+    }
+
+    public function isBonus(): ?bool
+    {
+        return $this->bonus;
+    }
+
+    public function setBonus(bool $bonus): static
+    {
+        $this->bonus = $bonus;
+
+        return $this;
+    }
+
+    public function getWorkHours(): ?string
+    {
+        return $this->workHours;
+    }
+
+    public function setWorkHours(string $workHours): static
+    {
+        $this->workHours = $workHours;
+
+        return $this;
+    }
+
+    public function getPlannedActivities(): ?string
+    {
+        return $this->plannedActivities;
+    }
+
+    public function setPlannedActivities(string $plannedActivities): static
+    {
+        $this->plannedActivities = $plannedActivities;
+
+        return $this;
+    }
+
+    public function getSharingToken(): ?string
+    {
+        return $this->sharingToken;
+    }
+
+    public function setSharingToken(?string $sharingToken): static
+    {
+        $this->sharingToken = $sharingToken;
+
+        return $this;
+    }
+
+    public function getTokenExpDate(): ?\DateTime
+    {
+        return $this->tokenExpDate;
+    }
+
+    public function setTokenExpDate(?\DateTime $tokenExpDate): static
+    {
+        $this->tokenExpDate = $tokenExpDate;
+
+        return $this;
+    }
+
+    public function getPdfUnsigned(): ?string
+    {
+        return $this->pdfUnsigned;
+    }
+
+    public function setPdfUnsigned(string $pdfUnsigned): static
+    {
+        $this->pdfUnsigned = $pdfUnsigned;
+
+        return $this;
+    }
+
+    public function getPdfSigned(): ?string
+    {
+        return $this->pdfSigned;
+    }
+
+    public function setPdfSigned(?string $pdfSigned): static
+    {
+        $this->pdfSigned = $pdfSigned;
+
+        return $this;
+    }
+
+    public function getStudent(): ?Student
+    {
+        return $this->student;
+    }
+
+    public function setStudent(?Student $student): static
+    {
+        $this->student = $student;
+
+        return $this;
+    }
+
+    public function getTutor(): ?Tutor
+    {
+        return $this->tutor;
+    }
+
+    public function setTutor(?Tutor $tutor): static
+    {
+        $this->tutor = $tutor;
+
+        return $this;
+    }
+
+    public function getSession(): ?Session
+    {
+        return $this->session;
+    }
+
+    public function setSession(?Session $session): static
+    {
+        $this->session = $session;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ContractDate>
+     */
+    public function getContractDates(): Collection
+    {
+        return $this->contractDates;
+    }
+
+    public function addContractDate(ContractDate $contractDate): static
+    {
+        if (!$this->contractDates->contains($contractDate)) {
+            $this->contractDates->add($contractDate);
+            $contractDate->setContract($this);
+        }
+
+        return $this;
+    }
+
+    public function removeContractDate(ContractDate $contractDate): static
+    {
+        if ($this->contractDates->removeElement($contractDate)) {
+            // set the owning side to null (unless already changed)
+            if ($contractDate->getContract() === $this) {
+                $contractDate->setContract(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): static
+    {
+        $this->organisation = $organisation;
+
+        return $this;
+    }
+}
