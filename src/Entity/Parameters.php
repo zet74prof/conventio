@@ -13,20 +13,26 @@ class Parameters
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $provisorName = null;
 
-    #[ORM\Column(length: 320)]
+    #[ORM\Column(length: 320, nullable: true)]
     private ?string $provisorEmail = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $ddfptName = null;
 
-    #[ORM\Column(length: 320)]
+    #[ORM\Column(length: 320, nullable: true)]
     private ?string $ddfptEmail = null;
 
-    #[ORM\Column(length: 15)]
+    #[ORM\Column(length: 15, nullable: true)]
     private ?string $ddfptTel = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $studentEmailDomain;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $professorEmailDomain;
 
     public function getId(): ?int
     {
@@ -90,6 +96,28 @@ class Parameters
     {
         $this->ddfptTel = $ddfptTel;
 
+        return $this;
+    }
+
+    public function getStudentEmailDomain(): ?string
+    {
+        return $this->studentEmailDomain;
+    }
+
+    public function setStudentEmailDomain(?string $studentEmailDomain): static
+    {
+        $this->studentEmailDomain = $studentEmailDomain;
+        return $this;
+    }
+
+    public function getProfessorEmailDomain(): ?string
+    {
+        return $this->professorEmailDomain;
+    }
+
+    public function setProfessorEmailDomain(?string $professorEmailDomain): static
+    {
+        $this->professorEmailDomain = $professorEmailDomain;
         return $this;
     }
 }

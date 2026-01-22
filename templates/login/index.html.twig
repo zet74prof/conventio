@@ -1,17 +1,17 @@
-{# templates/login/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}{% trans %}Se connecter{% endtrans %}{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="text-center">Login</h3>
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="text-center mb-0">{% trans %}Connexion{% endtrans %}</h3>
                     </div>
                     <div class="card-body">
+                        {# Display Login Errors #}
                         {% if error %}
                             <div class="alert alert-danger">
                                 {{ error.messageKey|trans(error.messageData, 'security') }}
@@ -19,21 +19,29 @@
                         {% endif %}
 
                         <form method="post">
-                            <div class="form-group mb-3">
-                                <label for="inputEmail">Email</label>
-                                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label for="inputPassword">Password</label>
-                                <input type="password" name="password" id="inputPassword" class="form-control" required>
+                            <div class="mb-3">
+                                <label for="inputEmail" class="form-label">{% trans %}Email{% endtrans %}</label>
+                                {# CORRECTED: name must be "_username" by default #}
+                                <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
                             </div>
 
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            <div class="mb-3">
+                                <label for="inputPassword" class="form-label">{% trans %}Mot de passe{% endtrans %}</label>
+                                {# CORRECTED: name must be "_password" by default #}
+                                <input type="password" name="_password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                            </div>
 
-                            <button class="btn btn-primary w-100" type="submit">
-                                Sign in
-                            </button>
+                            <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-primary" type="submit">
+                                    {% trans %}Se connecter{% endtrans %}
+                                </button>
+                            </div>
                         </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <small>{% trans %}Pas encore de compte ?{% endtrans %} <a href="{{ path('app_register') }}">{% trans %}S'inscrire{% endtrans %}</a></small>
                     </div>
                 </div>
             </div>

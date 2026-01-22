@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conventio - {% trans %}Gestion de stages{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="p-5 mb-4 bg-light rounded-3 shadow-sm text-center">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold text-primary">Conventio</h1>
+            <p class="col-md-8 fs-4 mx-auto">
+                {{ 'home.hero_description'|trans }}
+            </p>
+
+            {% if not app.user %}
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-4">
+                    <a href="{{ path('app_login') }}" class="btn btn-primary btn-lg px-4 gap-3">
+                        {% trans %}Créer un compte{% endtrans %}
+                    </a>
+                    <a href="{{ path('app_login') }}" class="btn btn-outline-secondary btn-lg px-4">
+                        {% trans %}Se connecter{% endtrans %}
+                    </a>
+                </div>
+            {% else %}
+                <div class="mt-4">
+                    <a href="#" class="btn btn-success btn-lg px-4">
+                        {% trans %}Accéder à mes conventions{% endtrans %}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row align-items-md-stretch">
+        <div class="col-md-6">
+            <div class="h-100 p-5 text-white bg-dark rounded-3">
+                <h2>{% trans %}Pour les Étudiants{% endtrans %}</h2>
+                <p>{% trans %}Remplissez vos informations, suivez l'état de validation de votre stage et signez votre convention en un clic.{% endtrans %}</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="h-100 p-5 bg-light border rounded-3">
+                <h2>{% trans %}Pour les Entreprises & Professeurs{% endtrans %}</h2>
+                <p>{% trans %}Validez les missions, définissez les dates et signez les documents numériquement en toute sécurité.{% endtrans %}</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

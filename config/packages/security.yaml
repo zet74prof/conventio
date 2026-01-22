@@ -35,7 +35,10 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_USER }
+        # Allow the home page (root) to be public
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        # Keep other pages secure
+        - { path: ^/, roles: PUBLIC_ACCESS }
 
 when@test:
     security:

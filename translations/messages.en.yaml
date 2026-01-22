@@ -1,0 +1,30 @@
+# Navbar
+Accueil: Home
+Se déconnecter: Logout
+Connexion: Login
+Inscription: Sign Up
+
+# Home Page - Headings & Buttons
+"Gestion de stages": Internship Management
+"Créer un compte": Sign Up
+"Se connecter": Log In
+"Accéder à mes conventions": Access my agreements
+
+# Home Page - Descriptions
+home.hero_description: "The simple and secure solution to generate and sign your internship agreements online. Save time and simplify your administrative procedures thanks to our digital signature process."
+# Cards
+"Pour les Étudiants": For Students
+"Remplissez vos informations, suivez l'état de validation de votre stage et signez votre convention en un clic.": "Fill in your information, follow the validation status of your internship, and sign your agreement in one click."
+"Pour les Entreprises & Professeurs": For Companies & Professors
+"Validez les missions, définissez les dates et signez les documents numériquement en toute sécurité.": "Validate missions, define dates, and sign documents digitally with complete security."
+"Nom complet": Full Name
+"Déjà un compte ?": Already have an account?
+"Bonjour !": Hi!
+"Merci de confirmer votre email pour activer votre compte Conventio.": Please confirm your email to activate your Conventio account.
+"Confirmer mon email": Confirm my email
+"Ce lien expirera dans": This link will expire in
+"À bientôt !": See you soon!
+"Email": Email
+"Mot de passe": Password
+"Pas encore de compte ?": No account yet?
+"S'inscrire": Sign Up

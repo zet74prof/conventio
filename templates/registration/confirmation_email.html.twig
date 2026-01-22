@@ -1,0 +1,13 @@
+<h1>{% trans %}Bonjour !{% endtrans %}</h1>
+
+<p>
+    {% trans %}Merci de confirmer votre email pour activer votre compte Conventio.{% endtrans %}
+    <br><br>
+    <a href="{{ signedUrl|raw }}">{% trans %}Confirmer mon email{% endtrans %}</a>.
+    <br><br>
+    {% trans %}Ce lien expirera dans{% endtrans %} {{ expiresAtMessageKey|trans(expiresAtMessageData, 'VerifyEmailBundle') }}.
+</p>
+
+<p>
+    {% trans %}À bientôt !{% endtrans %}
+</p>

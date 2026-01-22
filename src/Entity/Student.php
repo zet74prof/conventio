@@ -15,7 +15,7 @@ class Student extends User
     private ?string $personalEmail = null;
 
     #[ORM\ManyToOne(inversedBy: 'students')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Level $level = null;
 
     /**
