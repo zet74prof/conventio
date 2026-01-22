@@ -1,2 +1,7 @@
 # translations/messages.fr.yaml
 home.hero_description: "La solution simple et sécurisée pour générer et signer vos conventions de stage en ligne. Gagnez du temps et simplifiez vos démarches administratives grâce à notre processus de signature numérique."
+register.flash.success: "Un email de confirmation a été envoyé. Veuillez vérifier votre boîte de réception."
+register.flash.verified: "Votre email a été vérifié ! Vous pouvez maintenant vous connecter."
+register.flash.invalid_domain: "Domaine email non autorisé. Les étudiants doivent utiliser %student_domain% et les professeurs %prof_domain%."
+register.email.subject: "Veuillez confirmer votre email"
+register.error.email_exists: "Un compte existe déjà avec cette adresse email."

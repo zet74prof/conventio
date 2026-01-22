@@ -28,3 +28,16 @@ home.hero_description: "The simple and secure solution to generate and sign your
 "Mot de passe": Password
 "Pas encore de compte ?": No account yet?
 "S'inscrire": Sign Up
+register.flash.success: "A confirmation email has been sent. Please check your inbox."
+register.flash.verified: "Your email has been verified! You can now log in."
+register.flash.invalid_domain: "Email domain not authorized. Students must use %student_domain% and Professors %prof_domain%."
+register.email.subject: "Please confirm your email"
+"L'adresse email doit se terminer par": "The email address must end with"
+"ou": "or"
+"étudiant": "student"
+"professeur": "professor"
+"Prénom": First Name
+"Nom de famille": Surname
+"Nom": Surname
+register.error.email_exists: "There is already an account with this email."
+

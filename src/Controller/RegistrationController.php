@@ -28,9 +28,13 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParametersRepository $paramsRepo): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParametersRepository $paramsRepo, TranslatorInterface $translator): Response
     {
-        // 1. Create a form without a data class (returns an array)
+        // 1. Fetch parameters for validation logic
+        $params = $paramsRepo->findOneBy([]) ?? new Parameters();
+        $studentDomain = $params->getStudentEmailDomain() ?? '@to_be_defined_in_params.fr';
+        $profDomain = $params->getProfessorEmailDomain() ?? '@to_be_defined_in_params.fr';
+
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
 
@@ -54,13 +58,18 @@ class RegistrationController extends AbstractController
                 $user->setRoles(['ROLE_PROFESSOR']);
             } else {
                 // Error: Domain not authorized
-                $this->addFlash('danger', 'Email domain not authorized. Students must use ' . $studentDomain . ' and Professors ' . $profDomain);
+// Translated Error Flash
+                $this->addFlash('danger', $translator->trans('register.flash.invalid_domain', [
+                    '%student_domain%' => $studentDomain,
+                    '%prof_domain%' => $profDomain
+                ]));
                 return $this->redirectToRoute('app_register');
             }
 
             // 4. Manual Hydration
             $user->setEmail($email);
-            $user->setName($data['name']);
+            $user->setFirstname($data['firstname']);
+            $user->setLastname($data['lastname']);
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -76,10 +85,11 @@ class RegistrationController extends AbstractController
                 (new TemplatedEmail())
                     ->from(new Address('sio@lycee-faure.fr', 'Conventio Bot'))
                     ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
+                    ->subject($translator->trans('register.email.subject'))
                     ->htmlTemplate('registration/confirmation_email.html.twig')
             );
 
+            $this->addFlash('success', $translator->trans('register.flash.success'));
             // do anything else you need here, like send an email
 
             return $this->redirectToRoute('app_login');
@@ -87,6 +97,8 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+            'studentDomain' => $studentDomain,
+            'profDomain' => $profDomain,
         ]);
     }
 
@@ -114,7 +126,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', $translator->trans('register.flash.verified'));
 
         return $this->redirectToRoute('app_home');
     }

@@ -1,0 +1,2 @@
+# translations/validators.fr.yaml
+register.error.email_exists: "Un compte existe déjà avec cette adresse email."

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}{% trans %}Inscription{% endtrans %}{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
@@ -15,26 +15,72 @@
                             <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
                         {% endfor %}
 
-                        {{ form_start(registrationForm) }}
-                        <div class="mb-3">
-                            {{ form_label(registrationForm.name, 'Nom complet'|trans) }}
-                            {{ form_widget(registrationForm.name) }}
-                            {{ form_errors(registrationForm.name) }}
+                        {% for flash_danger in app.flashes('danger') %}
+                            <div class="alert alert-danger" role="alert">{{ flash_danger }}</div>
+                        {% endfor %}
+
+                        {# 1. Pass allowed domains as data attributes to the form #}
+                        <div id="registration-config"
+                             data-student-domain="{{ studentDomain }}"
+                             data-prof-domain="{{ profDomain }}">
                         </div>
-                        <div class="mb-3">
+
+                        {{ form_start(registrationForm, {'attr': {'id': 'registration-form', 'novalidate': 'novalidate'}}) }}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form_widget(registrationForm.firstname) }}
+                                    {{ form_label(registrationForm.firstname, 'Prénom'|trans) }}
+                                    {{ form_errors(registrationForm.firstname) }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    {{ form_widget(registrationForm.lastname) }}
+                                    {{ form_label(registrationForm.lastname, 'Nom'|trans) }}
+                                    {{ form_errors(registrationForm.lastname) }}
+                                </div>
+                            </div>
+                        </div>
+                        {# 2. Email Field #}
+                        <div class="form-floating mb-3">
+                            {{ form_widget(registrationForm.email, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'id': 'email-input',
+                                    'placeholder': 'name@example.com'
+                                }
+                            }) }}
                             {{ form_label(registrationForm.email, 'Email'|trans) }}
-                            {{ form_widget(registrationForm.email) }}
+
+                            {# Custom JS Error Message #}
+                            <div id="email-domain-error" class="text-danger mt-2 small" style="display: none;">
+                                <i class="bi bi-exclamation-circle"></i>
+                                {% trans %}L'adresse email doit se terminer par{% endtrans %}
+                                <strong>{{ studentDomain }}</strong> {% trans %}ou{% endtrans %} <strong>{{ profDomain }}</strong>.
+                            </div>
+
                             {{ form_errors(registrationForm.email) }}
                         </div>
-                        <div class="mb-3">
+
+                        {# 3. Password Field #}
+                        <div class="form-floating mb-4">
+                            {{ form_widget(registrationForm.plainPassword, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': 'Mot de passe'
+                                }
+                            }) }}
                             {{ form_label(registrationForm.plainPassword, 'Mot de passe'|trans) }}
-                            {{ form_widget(registrationForm.plainPassword) }}
                             {{ form_errors(registrationForm.plainPassword) }}
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">{% trans %}S'inscrire{% endtrans %}</button>
+                            <button type="submit" id="submit-btn" class="btn btn-primary btn-lg" disabled>
+                                {% trans %}S'inscrire{% endtrans %}
+                            </button>
                         </div>
+
                         {{ form_end(registrationForm) }}
                     </div>
                     <div class="card-footer text-center">
@@ -44,4 +90,43 @@
             </div>
         </div>
     </div>
+
+    {# 3. JavaScript for Real-time Validation #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const config = document.getElementById('registration-config');
+            const studentDomain = config.dataset.studentDomain;
+            const profDomain = config.dataset.profDomain;
+
+            const emailInput = document.getElementById('registration_form_email');
+            const errorMsg = document.getElementById('email-domain-error');
+            const submitBtn = document.getElementById('submit-btn');
+
+            function validateEmail() {
+                const email = emailInput.value.trim();
+                if (!email) {
+                    errorMsg.style.display = 'none';
+                    submitBtn.disabled = true;
+                    return;
+                }
+
+                const isValid = email.endsWith(studentDomain) || email.endsWith(profDomain);
+
+                if (isValid) {
+                    errorMsg.style.display = 'none';
+                    emailInput.classList.remove('is-invalid');
+                    emailInput.classList.add('is-valid');
+                    submitBtn.disabled = false;
+                } else {
+                    errorMsg.style.display = 'block';
+                    emailInput.classList.add('is-invalid');
+                    emailInput.classList.remove('is-valid');
+                    submitBtn.disabled = true;
+                }
+            }
+
+            // Validate on typing
+            emailInput.addEventListener('input', validateEmail);
+        });
+    </script>
 {% endblock %}
