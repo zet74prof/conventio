@@ -19,7 +19,7 @@ class Professor extends User
     /**
      * @var Collection<int, Level>
      */
-    #[ORM\OneToMany(targetEntity: Level::class, mappedBy: 'referentProfessor')]
+    #[ORM\ManyToMany(targetEntity: Level::class, inversedBy: 'referentProfessors')]
     private Collection $referentLevels;
 
     public function __construct()
@@ -64,7 +64,6 @@ class Professor extends User
     {
         if (!$this->referentLevels->contains($referentLevel)) {
             $this->referentLevels->add($referentLevel);
-            $referentLevel->setReferentProfessor($this);
         }
 
         return $this;
@@ -72,12 +71,7 @@ class Professor extends User
 
     public function removeReferentLevel(Level $referentLevel): static
     {
-        if ($this->referentLevels->removeElement($referentLevel)) {
-            // set the owning side to null (unless already changed)
-            if ($referentLevel->getReferentProfessor() === $this) {
-                $referentLevel->setReferentProfessor(null);
-            }
-        }
+        $this->referentLevels->removeElement($referentLevel);
 
         return $this;
     }

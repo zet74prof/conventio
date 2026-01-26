@@ -39,14 +39,18 @@ class Level
     #[ORM\ManyToMany(targetEntity: Professor::class, mappedBy: 'levels')]
     private Collection $professors;
 
-    #[ORM\ManyToOne(inversedBy: 'referentLevels')]
-    private ?Professor $referentProfessor = null;
+    /**
+     * @var Collection<int, Professor>
+     */
+    #[ORM\ManyToMany(targetEntity: Professor::class, mappedBy: 'referentLevels')]
+    private Collection $referentProfessors;
 
     public function __construct()
     {
         $this->sessions = new ArrayCollection();
         $this->students = new ArrayCollection();
         $this->professors = new ArrayCollection();
+        $this->referentProfessors = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -165,14 +169,29 @@ class Level
         return $this;
     }
 
-    public function getReferentProfessor(): ?Professor
+    /**
+     * @return Collection<int, Professor>
+     */
+    public function getReferentProfessors(): Collection
     {
-        return $this->referentProfessor;
+        return $this->referentProfessors;
     }
 
-    public function setReferentProfessor(?Professor $referentProfessor): static
+    public function addReferentProfessor(Professor $referentProfessor): static
     {
-        $this->referentProfessor = $referentProfessor;
+        if (!$this->referentProfessors->contains($referentProfessor)) {
+            $this->referentProfessors->add($referentProfessor);
+            $referentProfessor->addReferentLevel($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferentProfessor(Professor $referentProfessor): static
+    {
+        if ($this->referentProfessors->removeElement($referentProfessor)) {
+            $referentProfessor->removeReferentLevel($this);
+        }
 
         return $this;
     }
