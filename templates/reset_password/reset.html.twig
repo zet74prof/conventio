@@ -1,12 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reset your password{% endblock %}
+{% block title %}{% trans %}Réinitialiser le mot de passe{% endtrans %}{% endblock %}
 
 {% block body %}
-    <h1>Reset your password</h1>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h3 class="card-title mb-0">{% trans %}Nouveau mot de passe{% endtrans %}</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        {{ form_start(resetForm) }}
 
-    {{ form_start(resetForm) }}
-        {{ form_row(resetForm.plainPassword) }}
-        <button class="btn btn-primary">Reset password</button>
-    {{ form_end(resetForm) }}
+                        {# New Password #}
+                        <div class="form-floating mb-3">
+                            {{ form_widget(resetForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Nouveau mot de passe'}}) }}
+                            {{ form_label(resetForm.plainPassword.first) }}
+                            {{ form_errors(resetForm.plainPassword.first) }}
+                        </div>
+
+                        {# Repeat Password #}
+                        <div class="form-floating mb-4">
+                            {{ form_widget(resetForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Répéter le mot de passe'}}) }}
+                            {{ form_label(resetForm.plainPassword.second) }}
+                            {{ form_errors(resetForm.plainPassword.second) }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg">{% trans %}Réinitialiser le mot de passe{% endtrans %}</button>
+                        </div>
+                        {{ form_end(resetForm) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

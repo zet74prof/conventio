@@ -38,11 +38,11 @@
                     </li>
                 {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_home') }}">{% trans %}Connexion{% endtrans %}</a>
+                        <a class="nav-link" href="{{ path('app_login') }}">{% trans %}Connexion{% endtrans %}</a>
                     </li>
                     <li class="nav-item">
                         {# Note: Ensure you create a registration route named 'app_register' #}
-                        <a class="nav-link btn btn-outline-light ms-2" href="{{ path('app_home') }}">{% trans %}Inscription{% endtrans %}</a>
+                        <a class="nav-link btn btn-outline-light ms-2" href="{{ path('app_register') }}">{% trans %}Inscription{% endtrans %}</a>
                     </li>
                 {% endif %}
             </ul>

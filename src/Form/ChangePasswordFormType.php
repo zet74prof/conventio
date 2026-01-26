@@ -9,8 +9,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotCompromisedPassword;
-use Symfony\Component\Validator\Constraints\PasswordStrength;
 
 class ChangePasswordFormType extends AbstractType
 {
@@ -19,27 +17,20 @@ class ChangePasswordFormType extends AbstractType
         $builder
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
-                'options' => [
-                    'attr' => [
-                        'autocomplete' => 'new-password',
-                    ],
-                ],
                 'first_options' => [
-                    'constraints' => [
-                        new NotBlank(null, 'Veuillez entrer un mot de passe',),
-                        new Length(null, 6, 4096, null, null, null,'Votre mot de passe doit faire au moins {{ limit }} caractères'),
-                        new PasswordStrength(),
-                        new NotCompromisedPassword(),
-                    ],
-                    'label' => 'New password',
+                    'attr' => ['autocomplete' => 'new-password', 'placeholder' => 'Nouveau mot de passe'],
+                    'label' => 'Nouveau mot de passe',
                 ],
                 'second_options' => [
-                    'label' => 'Repeat Password',
+                    'attr' => ['autocomplete' => 'new-password', 'placeholder' => 'Répéter le mot de passe'],
+                    'label' => 'Répéter le mot de passe',
                 ],
-                'invalid_message' => 'The password fields must match.',
-                // Instead of being set onto the object directly,
-                // this is read and encoded in the controller
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'mapped' => false,
+                'constraints' => [
+                    new NotBlank(null, 'Veuillez entrer un mot de passe',),
+                    new Length(null, 6, 4096, null, null, null,'Votre mot de passe doit faire au moins {{ limit }} caractères'),
+                ],
             ])
         ;
     }

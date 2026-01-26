@@ -40,10 +40,9 @@ register.email.subject: "Please confirm your email"
 "Nom de famille": Surname
 "Nom": Surname
 register.error.email_exists: "There is already an account with this email."
-# Used by ChangePasswordFormType
-New password: Nouveau mot de passe
-Repeat Password: Répéter le mot de passe
-The password fields must match.: Les mots de passe doivent correspondre.
-Enter your email to reset your password.: Entrez votre email pour réinitialiser votre mot de passe.
-Send password reset email: Envoyer l'email de réinitialisation
-"Mot de passe oublié ?": Forgot password?
+"Nouveau mot de passe": "New password"
+"Répéter le mot de passe": "Repeat password"
+"Les mots de passe doivent correspondre.": "The password fields must match."
+"Veuillez entrer un mot de passe": "Please enter a password."
+"Votre mot de passe doit faire au moins {{ limit }} caractères": "Your password should be at least {{ limit }} characters."
+"Mot de passe oublié ?": "Forgot password?"
