@@ -46,3 +46,34 @@ register.error.email_exists: "There is already an account with this email."
 "Veuillez entrer un mot de passe": "Please enter a password."
 "Votre mot de passe doit faire au moins {{ limit }} caractères": "Your password should be at least {{ limit }} characters."
 "Mot de passe oublié ?": "Forgot password?"
+# --- Level / Formation Management ---
+
+# Page Titles & Headers
+"Gestion des Formations": "Training Courses Management"
+"Nouvelle Formation": "New Training Course"
+"Modifier la Formation": "Edit Training Course"
+"Détails de la Formation": "Training Course Details"
+
+# Buttons & Links
+"Créer une nouvelle formation": "Create a new training course"
+"Retour à la liste": "Back to list"
+"Supprimer cette formation": "Delete this training course"
+
+# Table & Display
+"Code": "Code"
+"Libellé": "Name"
+"Aucune formation enregistrée.": "No training courses recorded."
+"Aucune": "None"
+
+# Form Labels & Placeholders
+"Code (ex: BTS SIO)": "Code (e.g. BTS SIO)"
+"Libellé complet (ex: Services Informatiques aux Organisations)": "Full Name (e.g. Services Informatiques aux Organisations)"
+
+# Flash Messages & Alerts
+"La formation a été créée avec succès.": "The training course was created successfully."
+"La formation a été modifiée avec succès.": "The training course was modified successfully."
+"La formation a été supprimée.": "The training course was deleted."
+"Êtes-vous sûr de vouloir supprimer cette formation ?": "Are you sure you want to delete this training course?"
+
+# Validation Errors
+"Veuillez saisir un libellé.": "Please enter a name."
