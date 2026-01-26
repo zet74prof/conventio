@@ -20,6 +20,7 @@ class Professor extends User
      * @var Collection<int, Level>
      */
     #[ORM\ManyToMany(targetEntity: Level::class, inversedBy: 'referentProfessors')]
+    #[ORM\JoinTable(name: 'level_referent_professors')]
     private Collection $referentLevels;
 
     public function __construct()
