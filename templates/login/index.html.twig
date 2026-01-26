@@ -21,14 +21,17 @@
                         <form method="post">
                             <div class="mb-3">
                                 <label for="inputEmail" class="form-label">{% trans %}Email{% endtrans %}</label>
-                                {# CORRECTED: name must be "_username" by default #}
                                 <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
                             </div>
 
                             <div class="mb-3">
                                 <label for="inputPassword" class="form-label">{% trans %}Mot de passe{% endtrans %}</label>
-                                {# CORRECTED: name must be "_password" by default #}
                                 <input type="password" name="_password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                            </div>
+                            <div class="mb-4 text-end">
+                                <a href="{{ path('app_forgot_password_request') }}" class="text-decoration-none small text-muted">
+                                    {% trans %}Mot de passe oublié ?{% endtrans %}
+                                </a>
                             </div>
 
                             <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">

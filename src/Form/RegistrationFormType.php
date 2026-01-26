@@ -50,14 +50,8 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Mot de passe', // "Password"
                 'attr' => ['autocomplete' => 'new-password', 'class' => 'form-control'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        'max' => 4096,
-                    ]),
+                    new NotBlank(null, 'Veuillez entrer un mot de passe',),
+                    new Length(null, 6, 4096, null, null, null,'Votre mot de passe doit faire au moins {{ limit }} caractères'),
                 ],
             ])
         ;
