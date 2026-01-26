@@ -77,3 +77,25 @@ register.error.email_exists: "There is already an account with this email."
 
 # Validation Errors
 "Veuillez saisir un libellé.": "Please enter a name."
+
+"Professeur Principal": "Head Professor"
+"Professeurs Référents": "Referent Professors"
+"Référent": "Referent"
+"Choisir un professeur (optionnel)": "Choose a professor (optional)"
+"Non assigné": "Unassigned"
+
+# Profile
+"Profil": "Profile"
+"Mon Profil": "My Profile"
+"Étudiant": "Student"
+"Professeur": "Professor"
+"Email de connexion": "Login Email"
+"Informations Scolaires": "School Information"
+"Accès Pédagogiques": "Pedagogical Access"
+"Enregistrer les modifications": "Save changes"
+"Email personnel": "Personal Email"
+"Ma classe / Formation": "My Class / Level"
+"Sélectionnez votre formation": "Select your level"
+"Classes accessibles": "Accessible Levels"
+"Maintenez Ctrl (ou Cmd) pour sélectionner plusieurs classes.": "Hold Ctrl (or Cmd) to select multiple levels."
+profile.update.success: "Your profile has been updated successfully."

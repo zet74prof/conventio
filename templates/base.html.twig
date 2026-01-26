@@ -33,6 +33,8 @@
                             <i class="bi bi-person-circle"></i> {{ app.user.userIdentifier }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="{{ path('app_profile_edit') }}">{% trans %}Profil{% endtrans %}</a></li>
+                            <li><a class="dropdown-item" href="{{ path('app_profile_changepassword') }}">{% trans %}Modifier mon mot de passe{% endtrans %}</a></li>
                             <li><a class="dropdown-item" href="{{ path('app_logout') }}">{% trans %}Se déconnecter{% endtrans %}</a></li>
                         </ul>
                     </li>

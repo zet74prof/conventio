@@ -19,6 +19,7 @@
                         <th>Id</th>
                         <th>Code</th>
                         <th>Libellé</th>
+                        <th>Professeurs Référents</th>
                         <th class="text-end">Actions</th>
                     </tr>
                     </thead>
@@ -28,6 +29,16 @@
                             <td>{{ level.id }}</td>
                             <td><span class="badge bg-secondary">{{ level.levelCode }}</span></td>
                             <td>{{ level.levelName }}</td>
+                            <td>
+                                {% if level.referentProfessors is not empty %}
+                                    {% for prof in level.referentProfessors %}
+                                        <span class="badge bg-info text-dark">{{ prof.fullName }}</span>
+                                        {% if not loop.last %}<br>{% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    <span class="text-muted small">{% trans %}Non assigné{% endtrans %}</span>
+                                {% endif %}
+                            </td>
                             <td class="text-end">
                                 <a href="{{ path('app_level_show', {'id': level.id}) }}" class="btn btn-sm btn-info text-white me-1">
                                     <i class="bi bi-eye"></i>
