@@ -18,25 +18,37 @@ class Contract
     #[ORM\Column]
     private ?int $status = null;
 
-    #[ORM\Column]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $addressInternShip = null;
+
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $postalCodeInternship = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $cityInternship = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $countryInternship = null;
+
+    #[ORM\Column(nullable: true)]
     private ?bool $deplacement = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $transportFeeTaken = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $lunchTaken = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $hostTaken = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?bool $bonus = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 3000, nullable: true)]
     private ?string $workHours = null;
 
-    #[ORM\Column(length: 8000)]
+    #[ORM\Column(length: 8000, nullable: true)]
     private ?string $plannedActivities = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -68,7 +80,7 @@ class Contract
     #[ORM\OneToMany(targetEntity: ContractDate::class, mappedBy: 'contract', orphanRemoval: true)]
     private Collection $contractDates;
 
-    #[ORM\ManyToOne(inversedBy: 'contracts')]
+    #[ORM\ManyToOne(inversedBy: 'contracts', cascade: ['persist'])]
     private ?Organisation $organisation = null;
 
     public function __construct()
@@ -89,6 +101,54 @@ class Contract
     public function setStatus(int $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getAddressInternShip(): ?string
+    {
+        return $this->addressInternShip;
+    }
+
+    public function setAddressInternShip(string $addressInternShip): static
+    {
+        $this->addressInternShip = $addressInternShip;
+
+        return $this;
+    }
+
+    public function getPostalCodeInternship(): ?string
+    {
+        return $this->postalCodeInternship;
+    }
+
+    public function setPostalCodeInternship(string $postalCodeInternship): static
+    {
+        $this->postalCodeInternship = $postalCodeInternship;
+
+        return $this;
+    }
+
+    public function getCityInternship(): ?string
+    {
+        return $this->cityInternship;
+    }
+
+    public function setCityInternship(string $cityInternship): static
+    {
+        $this->cityInternship = $cityInternship;
+
+        return $this;
+    }
+
+    public function getCountryInternship(): ?string
+    {
+        return $this->countryInternship;
+    }
+
+    public function setCountryInternship(string $countryInternship): static
+    {
+        $this->countryInternship = $countryInternship;
 
         return $this;
     }

@@ -19,10 +19,16 @@
                         {% trans %}Se connecter{% endtrans %}
                     </a>
                 </div>
-            {% else %}
+            {% elseif is_granted('ROLE_STUDENT') %}
                 <div class="mt-4">
-                    <a href="#" class="btn btn-success btn-lg px-4">
+                    <a href="{{ path('app_student_contract_index') }}" class="btn btn-success btn-lg px-4">
                         {% trans %}Accéder à mes conventions{% endtrans %}
+                    </a>
+                </div>
+            {% elseif is_granted('ROLE_PROFESSOR') %}
+                <div class="mt-4">
+                    <a href="{{ path('app_home') }}" class="btn btn-success btn-lg px-4">
+                        {% trans %}Accéder aux conventions{% endtrans %}
                     </a>
                 </div>
             {% endif %}

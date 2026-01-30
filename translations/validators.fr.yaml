@@ -1,2 +1,5 @@
 # translations/validators.fr.yaml
 register.error.email_exists: "Un compte existe déjà avec cette adresse email."
+session.dates.min_count: "Une session doit comporter au moins une période (date de début et fin)."
+session.date.end_before_start: "La date de fin doit être postérieure à la date de début."
+session.dates.overlap: "Cette période chevauche ou commence avant la fin de la période précédente."

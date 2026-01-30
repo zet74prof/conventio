@@ -28,6 +28,43 @@
             </ul>
             <ul class="navbar-nav ms-auto">
                 {% if app.user %}
+                    {# ADMIN SECTION - Only visible to Admins #}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-shield-lock-fill"></i> {% trans %}Administration{% endtrans %}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+
+                                {# 1. Levels / Formations #}
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('app_level_index') }}">
+                                        <i class="bi bi-mortarboard me-2 text-primary"></i>
+                                        {% trans %}Formations{% endtrans %}
+                                    </a>
+                                </li>
+
+                                {# 2. Sessions #}
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('app_session_index') }}">
+                                        <i class="bi bi-calendar-range me-2 text-primary"></i>
+                                        {% trans %}Sessions{% endtrans %}
+                                    </a>
+                                </li>
+
+                                <li><hr class="dropdown-divider"></li>
+
+                                {# 3. Parameters #}
+                                <li>
+                                    {# Ensure the route 'app_admin_parameters' exists, otherwise this will cause an error #}
+                                    <a class="dropdown-item" href="{{ path('app_admin_parameters') }}">
+                                        <i class="bi bi-sliders me-2 text-secondary"></i>
+                                        {% trans %}Paramètres{% endtrans %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-person-circle"></i> {{ app.user.userIdentifier }}

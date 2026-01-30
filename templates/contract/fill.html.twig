@@ -1,0 +1,336 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Compléter la convention{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+                <div class="alert alert-info shadow-sm d-flex align-items-center mb-5">
+                    <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                    <div>
+                        <h4 class="alert-heading h5 mb-1">{% trans %}Convention pour l'étudiant{% endtrans %} : {{ contract.student.fullName }}</h4>
+                        <p class="mb-0 small">{% trans %}Merci de compléter les informations de l'entreprise et du stage.{% endtrans %}</p>
+                    </div>
+                </div>
+
+                {{ form_start(form, {'attr': {'id': 'contract-form'}}) }}
+
+                {# Wrap the section in the Stimulus controller for Address Copy #}
+                <div data-controller="address-copy">
+
+                    {# --- ORGANISATION (Source) --- #}
+                    <div class="card mb-5 shadow-sm border-0">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h5 class="mb-0"><i class="bi bi-building me-2"></i>{% trans %}L'Organisme d'accueil{% endtrans %}</h5>
+                        </div>
+                        <div class="card-body p-4">
+
+                            <h6 class="text-secondary text-uppercase fs-7 mb-3">{% trans %}Identité{% endtrans %}</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.name, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+                                        {{ form_label(form.organisation.name) }}
+                                        {{ form_errors(form.organisation.name) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.siret, {'attr': {'class': 'form-control', 'placeholder': 'SIRET'}}) }}
+                                        {{ form_label(form.organisation.siret) }}
+                                        {{ form_errors(form.organisation.siret) }}
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.website, {'attr': {'class': 'form-control', 'placeholder': 'Site Web'}}) }}
+                                        {{ form_label(form.organisation.website) }}
+                                        {{ form_errors(form.organisation.website) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4 text-muted">
+
+                            <h6 class="text-secondary text-uppercase fs-7 mb-3">{% trans %}Siège Social{% endtrans %}</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.addressHq, {
+                                            'attr': {
+                                                'class': 'form-control',
+                                                'placeholder': 'Adresse',
+                                                'data-address-copy-target': 'hqAddress',
+                                                'data-action': 'input->address-copy#sync'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.organisation.addressHq) }}
+                                        {{ form_errors(form.organisation.addressHq) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.postalCodeHq, {
+                                            'attr': {
+                                                'class': 'form-control',
+                                                'placeholder': 'CP',
+                                                'data-address-copy-target': 'hqZip',
+                                                'data-action': 'input->address-copy#sync'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.organisation.postalCodeHq) }}
+                                        {{ form_errors(form.organisation.postalCodeHq) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.cityHq, {
+                                            'attr': {
+                                                'class': 'form-control',
+                                                'placeholder': 'Ville',
+                                                'data-address-copy-target': 'hqCity',
+                                                'data-action': 'input->address-copy#sync'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.organisation.cityHq) }}
+                                        {{ form_errors(form.organisation.cityHq) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.countryHq, {
+                                            'attr': {
+                                                'class': 'form-control',
+                                                'placeholder': 'Pays',
+                                                'data-address-copy-target': 'hqCountry',
+                                                'data-action': 'input->address-copy#sync'
+                                            }
+                                        }) }}
+                                        {{ form_label(form.organisation.countryHq) }}
+                                        {{ form_errors(form.organisation.countryHq) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4 text-muted">
+
+                            <h6 class="text-secondary text-uppercase fs-7 mb-3">{% trans %}Responsable (Signataire){% endtrans %}</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.respName, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+                                        {{ form_label(form.organisation.respName) }}
+                                        {{ form_errors(form.organisation.respName) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.respFunction, {'attr': {'class': 'form-control', 'placeholder': 'Fonction'}}) }}
+                                        {{ form_label(form.organisation.respFunction) }}
+                                        {{ form_errors(form.organisation.respFunction) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.respEmail, {'attr': {'class': 'form-control', 'placeholder': 'Email'}}) }}
+                                        {{ form_label(form.organisation.respEmail) }}
+                                        {{ form_errors(form.organisation.respEmail) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.respPhone, {'attr': {'class': 'form-control', 'placeholder': 'Téléphone'}}) }}
+                                        {{ form_label(form.organisation.respPhone) }}
+                                        {{ form_errors(form.organisation.respPhone) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4 text-muted">
+
+                            <h6 class="text-secondary text-uppercase fs-7 mb-3">{% trans %}Assurance Responsabilité Civile{% endtrans %}</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.insuranceName, {'attr': {'class': 'form-control', 'placeholder': 'Assureur'}}) }}
+                                        {{ form_label(form.organisation.insuranceName) }}
+                                        {{ form_errors(form.organisation.insuranceName) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.insuranceContract, {'attr': {'class': 'form-control', 'placeholder': 'N° Contrat'}}) }}
+                                        {{ form_label(form.organisation.insuranceContract) }}
+                                        {{ form_errors(form.organisation.insuranceContract) }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# --- INTERNSHIP (Destination) --- #}
+                    <div class="card mb-5 shadow-sm border-0">
+                        <div class="card-header bg-primary text-white py-3">
+                            <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>{% trans %}Le Stage{% endtrans %}</h5>
+                        </div>
+                        <div class="card-body p-4">
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="text-secondary text-uppercase fs-7 mb-0">{% trans %}Lieu du stage{% endtrans %}</h6>
+                                <div class="form-check form-switch">
+                                    {{ form_widget(form.sameAddress, {
+                                        'attr': {
+                                            'class': 'form-check-input',
+                                            'role': 'switch',
+                                            'data-address-copy-target': 'checkbox',
+                                            'data-action': 'change->address-copy#toggle'
+                                        }
+                                    }) }}
+                                    {{ form_label(form.sameAddress, null, {'label_attr': {'class': 'form-check-label small text-muted'}}) }}
+                                </div>
+                            </div>
+
+                            {# Destination Container #}
+                            <div id="internship-address-fields" data-address-copy-target="container">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            {{ form_widget(form.addressInternship, {'attr': {'class': 'form-control', 'placeholder': 'Adresse', 'data-address-copy-target': 'jobAddress'}}) }}
+                                            {{ form_label(form.addressInternship) }}
+                                            {{ form_errors(form.addressInternship) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            {{ form_widget(form.postalCodeInternship, {'attr': {'class': 'form-control', 'placeholder': 'CP', 'data-address-copy-target': 'jobZip'}}) }}
+                                            {{ form_label(form.postalCodeInternship) }}
+                                            {{ form_errors(form.postalCodeInternship) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            {{ form_widget(form.cityInternship, {'attr': {'class': 'form-control', 'placeholder': 'Ville', 'data-address-copy-target': 'jobCity'}}) }}
+                                            {{ form_label(form.cityInternship) }}
+                                            {{ form_errors(form.cityInternship) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            {{ form_widget(form.countryInternship, {'attr': {'class': 'form-control', 'placeholder': 'Pays', 'data-address-copy-target': 'jobCountry'}}) }}
+                                            {{ form_label(form.countryInternship) }}
+                                            {{ form_errors(form.countryInternship) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4 text-muted">
+
+                            <h6 class="text-secondary text-uppercase fs-7 mb-3">{% trans %}Logistique{% endtrans %}</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-check p-3 border rounded bg-light">
+                                        {{ form_widget(form.deplacement, {'attr': {'class': 'form-check-input'}}) }}
+                                        {{ form_label(form.deplacement, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check p-3 border rounded bg-light">
+                                        {{ form_widget(form.transportFeeTaken, {'attr': {'class': 'form-check-input'}}) }}
+                                        {{ form_label(form.transportFeeTaken, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check p-3 border rounded bg-light">
+                                        {{ form_widget(form.lunchTaken, {'attr': {'class': 'form-check-input'}}) }}
+                                        {{ form_label(form.lunchTaken, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check p-3 border rounded bg-light">
+                                        {{ form_widget(form.hostTaken, {'attr': {'class': 'form-check-input'}}) }}
+                                        {{ form_label(form.hostTaken, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-check p-3 border rounded bg-light">
+                                        {{ form_widget(form.bonus, {'attr': {'class': 'form-check-input'}}) }}
+                                        {{ form_label(form.bonus, null, {'label_attr': {'class': 'form-check-label'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="text-secondary text-uppercase fs-7 mt-4 mb-3">{% trans %}Activités{% endtrans %}</h6>
+                            <div class="form-floating">
+                                {{ form_widget(form.plannedActivities, {'attr': {'class': 'form-control', 'style': 'height: 150px', 'placeholder': 'Activités'}}) }}
+                                {{ form_label(form.plannedActivities) }}
+                                {{ form_errors(form.plannedActivities) }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div> {# End Stimulus Controller #}
+
+                {# WORK HOURS GRID #}
+                <div class="card mb-5 shadow-sm border-0" data-controller="work-hours">
+                    <div class="card-header bg-primary text-white py-3">
+                        <h5 class="mb-0"><i class="bi bi-clock me-2"></i>{% trans %}Horaires de travail{% endtrans %}</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="alert alert-light border mb-4">
+                            <i class="bi bi-lightbulb text-warning me-2"></i>
+                            <span class="small text-muted">{% trans %}Indiquez les horaires (ex: 09:00 - 17:00). Laissez vide pour les jours de repos.{% endtrans %}</span>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered text-center align-middle">
+                                <thead class="table-light">
+                                <tr>
+                                    <th style="width: 150px;">{% trans %}Jour{% endtrans %}</th>
+                                    <th>{% trans %}Matin (Début - Fin){% endtrans %}</th>
+                                    <th>{% trans %}Après-midi (Début - Fin){% endtrans %}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for day in ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
+                                    <tr data-work-hours-target="row" data-day="{{ day }}">
+                                        <td class="fw-bold bg-light">{{ day | trans }}</td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <input type="time" class="form-control" name="am_start" data-action="input->work-hours#update">
+                                                <span class="input-group-text bg-white">-</span>
+                                                <input type="time" class="form-control" name="am_end" data-action="input->work-hours#update">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <input type="time" class="form-control" name="pm_start" data-action="input->work-hours#update">
+                                                <span class="input-group-text bg-white">-</span>
+                                                <input type="time" class="form-control" name="pm_end" data-action="input->work-hours#update">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {# Hidden input targeted by the controller #}
+                        {{ form_widget(form.workHours, {'attr': {'data-work-hours-target': 'input'}}) }}
+
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg py-3 shadow">
+                        <i class="bi bi-check-lg me-2"></i>{% trans %}Valider la convention{% endtrans %}
+                    </button>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

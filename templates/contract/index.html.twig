@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Mes Conventions{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        {# --- DÉBUT BLOC FLASH MESSAGES --- #}
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                {# On transforme le label 'error' en 'danger' pour correspondre aux classes Bootstrap #}
+                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        {# --- FIN BLOC FLASH MESSAGES --- #}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3">
+                <i class="bi bi-file-text me-2"></i>{% trans %}Mes Conventions de stage{% endtrans %}
+            </h1>
+            <a href="{{ path('app_student_contract_new') }}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>{% trans %}Nouvelle convention{% endtrans %}
+            </a>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0 align-middle">
+                        <thead class="table-light">
+                        <tr>
+                            <th>{% trans %}Session / Formation{% endtrans %}</th>
+                            <th>{% trans %}Entreprise{% endtrans %}</th>
+                            <th>{% trans %}Tuteur{% endtrans %}</th>
+                            <th class="text-center">{% trans %}Statut{% endtrans %}</th>
+                            <th class="text-end">{% trans %}Actions{% endtrans %}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for contract in contracts %}
+                            <tr>
+                                <td>
+                                    {% if contract.session %}
+                                        <span class="badge bg-secondary">{{ contract.session.level.levelName }}</span>
+                                    {% else %}
+                                        <span class="text-muted small">{% trans %}Non assignée{% endtrans %}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if contract.organisation %}
+                                        <strong>{{ contract.organisation.name }}</strong>
+                                    {% else %}
+                                        <span class="text-muted fst-italic">{% trans %}En attente{% endtrans %}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if contract.tutor %}
+                                        {{ contract.tutor.fullName }}
+                                        <div class="small text-muted">{{ contract.tutor.email }}</div>
+                                    {% else %}
+                                        <span class="text-muted">--</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {# Status Mapping (Int -> Badge) #}
+                                    {% if contract.status == 0 %}
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-hourglass-split me-1"></i> {% trans %}En attente tuteur{% endtrans %}
+                                        </span>
+                                    {% elseif contract.status == 1 %}
+                                        <span class="badge bg-info text-dark">
+                                            <i class="bi bi-pencil-square me-1"></i> {% trans %}Remplie par tuteur{% endtrans %}
+                                        </span>
+                                    {% elseif contract.status == 2 %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i> {% trans %}Validée{% endtrans %}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            {% trans %}Statut inconnu{% endtrans %} ({{ contract.status }})
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    {# Add view/download buttons here later #}
+                                    <button class="btn btn-sm btn-outline-secondary" disabled title="{% trans %}Détails (Bientôt){% endtrans %}">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="bi bi-folder-x display-6 d-block mb-3"></i>
+                                    {% trans %}Vous n'avez créé aucune convention pour le moment.{% endtrans %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

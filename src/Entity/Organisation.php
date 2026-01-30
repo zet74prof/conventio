@@ -30,18 +30,6 @@ class Organisation
     #[ORM\Column(length: 255)]
     private ?string $countryHq = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $addressInternShip = null;
-
-    #[ORM\Column(length: 15)]
-    private ?string $postalCodeInternship = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $cityInternship = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $countryInternship = null;
-
     #[ORM\Column(length: 320, nullable: true)]
     private ?string $website = null;
 
@@ -138,54 +126,6 @@ class Organisation
     public function setCountryHq(string $countryHq): static
     {
         $this->countryHq = $countryHq;
-
-        return $this;
-    }
-
-    public function getAddressInternShip(): ?string
-    {
-        return $this->addressInternShip;
-    }
-
-    public function setAddressInternShip(string $addressInternShip): static
-    {
-        $this->addressInternShip = $addressInternShip;
-
-        return $this;
-    }
-
-    public function getPostalCodeInternship(): ?string
-    {
-        return $this->postalCodeInternship;
-    }
-
-    public function setPostalCodeInternship(string $postalCodeInternship): static
-    {
-        $this->postalCodeInternship = $postalCodeInternship;
-
-        return $this;
-    }
-
-    public function getCityInternship(): ?string
-    {
-        return $this->cityInternship;
-    }
-
-    public function setCityInternship(string $cityInternship): static
-    {
-        $this->cityInternship = $cityInternship;
-
-        return $this;
-    }
-
-    public function getCountryInternship(): ?string
-    {
-        return $this->countryInternship;
-    }
-
-    public function setCountryInternship(string $countryInternship): static
-    {
-        $this->countryInternship = $countryInternship;
 
         return $this;
     }

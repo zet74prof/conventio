@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Nouvelle Convention{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title mb-0 h5">
+                            <i class="bi bi-file-earmark-plus me-2"></i>
+                            {% trans %}Initialiser une convention{% endtrans %}
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info mb-4">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            {% trans %}Renseignez les coordonnées de votre tuteur en entreprise. Un email lui sera automatiquement envoyé contenant un lien sécurisé pour compléter les détails techniques et juridiques de la convention.{% endtrans %}
+                        </div>
+
+                        {{ form_start(form) }}
+
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form_row(form.tutorFirstname) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.tutorLastname) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_row(form.tutorEmail) }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success btn-lg">
+                                <i class="bi bi-send me-2"></i> {% trans %}Envoyer l'invitation{% endtrans %}
+                            </button>
+                            <a href="{{ path('app_student_contract_index') }}" class="btn btn-outline-secondary">
+                                {% trans %}Annuler{% endtrans %}
+                            </a>
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

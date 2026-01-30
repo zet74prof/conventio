@@ -6,6 +6,8 @@ use App\Repository\SessionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
 class Session
@@ -15,18 +17,25 @@ class Session
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $label = null;
-
     /**
      * @var Collection<int, SessionDate>
      */
-    #[ORM\OneToMany(targetEntity: SessionDate::class, mappedBy: 'session', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: SessionDate::class, mappedBy: 'session', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'session.dates.min_count'
+    )]
+    #[Assert\Valid] // Important: Validate the inner SessionDate objects too
     private Collection $sessionDates;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Level $level = null;
+
+    #[ORM\Column(options: ['default' => true])]
+    private ?bool $active = true;
+
+    public string $computedName;
 
     /**
      * @var Collection<int, Contract>
@@ -45,17 +54,18 @@ class Session
         return $this->id;
     }
 
-    public function getLabel(): ?string
+    public function isActive(): ?bool
     {
-        return $this->label;
+        return $this->active;
     }
 
-    public function setLabel(string $label): static
+    public function setActive(bool $active): static
     {
-        $this->label = $label;
+        $this->active = $active;
 
         return $this;
     }
+
 
     /**
      * @return Collection<int, SessionDate>
@@ -127,5 +137,55 @@ class Session
         }
 
         return $this;
+    }
+
+    // Helper to get the earliest start date for sorting
+    public function getFirstDate(): ?\DateTimeInterface
+    {
+        if ($this->sessionDates->isEmpty()) {
+            return null;
+        }
+
+        // Ensure we actually return the earliest date
+        // (The collection might not be sorted by DB)
+        $dates = $this->sessionDates->toArray();
+        usort($dates, fn($a, $b) => $a->getStartDate() <=> $b->getStartDate());
+
+        return $dates[0]->getStartDate();
+    }
+
+    #[Assert\Callback]
+    public function validateSequentialDates(ExecutionContextInterface $context): void
+    {
+        // Convert to array to sort them
+        $dates = $this->sessionDates->toArray();
+
+        // Sort by start date to check chronological order
+        usort($dates, function(SessionDate $a, SessionDate $b) {
+            if (!$a->getStartDate() || !$b->getStartDate()) return 0;
+            return $a->getStartDate() <=> $b->getStartDate();
+        });
+
+        $lastEndDate = null;
+
+        foreach ($dates as $index => $sessionDate) {
+            $start = $sessionDate->getStartDate();
+            $end = $sessionDate->getEndDate();
+
+            if (!$start || !$end) continue;
+
+            // If this is not the first period, check against the previous end date
+            if ($lastEndDate !== null) {
+                // Rule: New start date must be strictly after the previous end date
+                if ($start <= $lastEndDate) {
+                    $context->buildViolation('session.dates.overlap')
+                        // We try to attach this error to the specific item in the form collection
+                        ->atPath("sessionDates[$index].startDate")
+                        ->addViolation();
+                }
+            }
+
+            $lastEndDate = $end;
+        }
     }
 }

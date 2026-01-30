@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\SessionDateRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: SessionDateRepository::class)]
 class SessionDate
@@ -15,9 +17,11 @@ class SessionDate
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'Veuillez saisir une date de début.')]
     private ?\DateTime $startDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotNull(message: 'Veuillez saisir une date de fin.')]
     private ?\DateTime $endDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionDates')]
@@ -63,5 +67,21 @@ class SessionDate
         $this->session = $session;
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validateDateRange(ExecutionContextInterface $context): void
+    {
+        // If dates are missing, other validators handle it
+        if (null === $this->startDate || null === $this->endDate) {
+            return;
+        }
+
+        // Check if End is NOT strictly after Start
+        if ($this->endDate <= $this->startDate) {
+            $context->buildViolation('session.date.end_before_start')
+                ->atPath('endDate') // Attach error to the endDate field
+                ->addViolation();
+        }
     }
 }
