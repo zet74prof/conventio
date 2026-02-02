@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Convention de Stage</title>
+    <style>
+        /* PDF Specific Reset */
+        @page {
+            margin: 1.5cm;
+            size: A4;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #000;
+            background: #fff;
+        }
+
+        /* Layout */
+        .header {
+            width: 100%;
+            margin-bottom: 30px;
+            overflow: hidden;
+            border-bottom: 2px solid #333;
+            padding-bottom: 15px;
+        }
+        .header-left {
+            float: left;
+            width: 45%;
+        }
+        .header-right {
+            float: right;
+            width: 45%;
+            text-align: right;
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 16pt;
+            margin: 20px 0;
+            border: 1px solid #000;
+            padding: 10px;
+            background-color: #f0f0f0;
+        }
+
+        h2 {
+            font-size: 12pt;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            text-decoration: underline;
+        }
+
+        .section {
+            margin-bottom: 15px;
+        }
+
+        .box {
+            border: 1px solid #999;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #fafafa;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        /* Table for Hours */
+        table.hours-grid {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 9pt;
+        }
+        table.hours-grid th, table.hours-grid td {
+            border: 1px solid #000;
+            padding: 5px;
+            text-align: center;
+        }
+        table.hours-grid th {
+            background-color: #eee;
+        }
+
+        /* Signatures */
+        .signatures {
+            margin-top: 50px;
+            width: 100%;
+            page-break-inside: avoid;
+        }
+        .sig-block {
+            float: left;
+            width: 33%;
+            height: 120px;
+            font-size: 10pt;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+            border-top: 1px solid #ccc;
+            padding-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+{# Header #}
+<div class="header">
+    <div class="header-left">
+        <strong>NOM DE L'ÉTABLISSEMENT</strong><br>
+        Service des Stages<br>
+        1 rue de l'Éducation<br>
+        75000 Paris
+    </div>
+    <div class="header-right">
+        Année scolaire : {{ "now"|date("Y") }} / {{ "now"|date("Y") + 1 }}<br>
+        Formation : <strong>{{ session ? session.level.levelName : 'Non définie' }}</strong>
+    </div>
+</div>
+
+<h1>Convention de Stage</h1>
+
+{# Parties #}
+<div class="section">
+    <p><strong>ENTRE LES SOUSSIGNÉS :</strong></p>
+
+    <div class="box">
+        <span class="label">L'ÉTABLISSEMENT D'ENSEIGNEMENT :</span> Nom de l'établissement<br>
+        Représenté par M. le Directeur.
+    </div>
+
+    <div class="box">
+        <span class="label">L'ORGANISME D'ACCUEIL :</span> {{ organisation.name }}<br>
+        Adresse : {{ organisation.addressHq }}, {{ organisation.postalCodeHq }} {{ organisation.cityHq }}<br>
+        SIRET : {{ organisation.siret }}<br>
+        Représenté par : {{ organisation.respName }} ({{ organisation.respFunction }})
+    </div>
+
+    <div class="box">
+        <span class="label">LE STAGIAIRE :</span> {{ student.firstname }} {{ student.lastname|upper }}<br>
+        Email : {{ student.email }}
+    </div>
+</div>
+
+{# Articles #}
+<div class="section">
+    <h2>Article 1 : Objet de la convention</h2>
+    <p>La présente convention a pour objet de définir les conditions dans lesquelles le stagiaire sera accueilli au sein de l'organisme d'accueil pour y effectuer un stage.</p>
+</div>
+
+<div class="section">
+    <h2>Article 2 : Dates et Lieux</h2>
+    <p>
+        Le stage se déroulera du
+        <strong>
+            {% if session and session.sessionDates|first %}
+                {{ session.sessionDates|first.startDate|date('d/m/Y') }} au {{ session.sessionDates|first.endDate|date('d/m/Y') }}
+            {% else %}
+                [Dates non définies]
+            {% endif %}
+        </strong>.
+    </p>
+    <p>
+        Lieu du stage :
+        {% if contract.addressInternship %}
+            {{ contract.addressInternship }}, {{ contract.postalCodeInternship }} {{ contract.cityInternship }}
+        {% else %}
+            Identique au siège de l'organisme.
+        {% endif %}
+    </p>
+</div>
+
+<div class="section">
+    <h2>Article 3 : Tuteur et Activités</h2>
+    <p>
+        <span class="label">Tuteur de stage :</span> {{ tutor ? tutor.fullName : 'Non assigné' }} ({{ tutor ? tutor.email : '' }})<br>
+        <span class="label">Activités confiées :</span><br>
+        {{ contract.plannedActivities|nl2br }}
+    </p>
+</div>
+
+<div class="section">
+    <h2>Article 4 : Gratification et Avantages</h2>
+    <p>
+        Gratification : {{ contract.bonus ? 'OUI' : 'NON' }}<br>
+        Prise en charge frais de transport : {{ contract.transportFeeTaken ? 'OUI' : 'NON' }}<br>
+        Restauration : {{ contract.lunchTaken ? 'OUI' : 'NON' }}<br>
+        Hébergement : {{ contract.hostTaken ? 'OUI' : 'NON' }}
+    </p>
+</div>
+
+<div class="section">
+    <h2>Article 5 : Horaires de présence</h2>
+    {% if workHours %}
+        <table class="hours-grid">
+            <thead>
+            <tr>
+                <th>Jour</th>
+                <th>Matin</th>
+                <th>Après-midi</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for day in ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'] %}
+                <tr>
+                    <td>{{ day }}</td>
+                    <td>
+                        {% if workHours[day] is defined %}
+                            {{ workHours[day].am_start }} - {{ workHours[day].am_end }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if workHours[day] is defined %}
+                            {{ workHours[day].pm_start }} - {{ workHours[day].pm_end }}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Horaires non spécifiés.</p>
+    {% endif %}
+</div>
+
+<div class="section">
+    <h2>Article 6 : Assurance</h2>
+    <p>
+        L'organisme d'accueil déclare être garanti au titre de la responsabilité civile auprès de :
+        {{ organisation.insuranceName }} (Contrat n° {{ organisation.insuranceContract }}).
+    </p>
+</div>
+
+{# Signatures #}
+<div class="signatures">
+    <div class="sig-block">
+        <strong>Le Stagiaire</strong><br>
+        <small>(Lu et approuvé)</small><br><br><br>
+        Signé
+    </div>
+    <div class="sig-block" style="text-align: center;">
+        <strong>L'Organisme d'Accueil</strong><br>
+        <small>(Cachet et signature)</small><br><br><br>
+    </div>
+    <div class="sig-block" style="text-align: right;">
+        <strong>L'Établissement</strong><br>
+        <small>(Le Directeur)</small><br><br><br>
+    </div>
+</div>
+
+{# Footer #}
+<div class="footer">
+    Convention générée le {{ "now"|date("d/m/Y à H:i") }} - Système de gestion des stages
+</div>
+
+</body>
+</html>

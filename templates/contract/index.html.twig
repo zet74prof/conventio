@@ -87,6 +87,9 @@
                                     <button class="btn btn-sm btn-outline-secondary" disabled title="{% trans %}Détails (Bientôt){% endtrans %}">
                                         <i class="bi bi-eye"></i>
                                     </button>
+                                    <a href="{{ path('app_contract_pdf_download', {id: contract.id}) }}" class="btn btn-sm btn-outline-danger" target="_blank">
+                                        <i class="bi bi-file-pdf"></i> PDF
+                                    </a>
                                 </td>
                             </tr>
                         {% else %}

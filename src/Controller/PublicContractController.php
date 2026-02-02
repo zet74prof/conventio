@@ -91,12 +91,19 @@ class PublicContractController extends AbstractController
             $em->persist($contract);
             $em->flush();
 
-            return $this->render('contract/success.html.twig');
+            return $this->redirectToRoute('app_public_contract_success');
+
         }
 
         return $this->render('contract/fill.html.twig', [
             'form' => $form->createView(),
             'contract' => $contract,
         ]);
+    }
+
+    #[Route('/contract/success', name: 'app_public_contract_success')]
+    public function success(): Response
+    {
+        return $this->render('contract/success.html.twig');
     }
 }
