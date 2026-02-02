@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% trans %}Validations en attente{% endtrans %}{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">
+            <i class="bi bi-check2-square me-2"></i>{% trans %}Conventions à valider{% endtrans %}
+        </h1>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>{% trans %}Étudiant{% endtrans %}</th>
+                        <th>{% trans %}Entreprise{% endtrans %}</th>
+                        <th>{% trans %}Dates{% endtrans %}</th>
+                        <th>{% trans %}Action{% endtrans %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for contract in contracts %}
+                        <tr>
+                            <td class="fw-bold">{{ contract.student.fullName }}</td>
+                            <td>{{ contract.organisation.name }}</td>
+                            <td>
+                                {% if contract.session and contract.session.sessionDates|first %}
+                                    {{ contract.session.sessionDates|first.startDate|date('d/m/Y') }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ path('app_professor_contract_review', {id: contract.id}) }}" class="btn btn-primary btn-sm">
+                                    <i class="bi bi-eye"></i> {% trans %}Examiner{% endtrans %}
+                                </a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                {% trans %}Aucune demande de validation en attente.{% endtrans %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

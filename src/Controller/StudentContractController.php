@@ -21,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Uid\Uuid;
 
 #[Route('/student/contract')]
-#[IsGranted('ROLE_STUDENT')] // Assuming your student role
+#[IsGranted('ROLE_STUDENT')]
 class StudentContractController extends AbstractController
 {
     #[Route('/', name: 'app_student_contract_index')]
@@ -137,5 +137,66 @@ class StudentContractController extends AbstractController
         return $this->render('contract/new.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/{id}/request-approval', name: 'app_student_contract_request_approval', methods: ['POST'])]
+    public function requestApproval(
+        Contract $contract,
+        EntityManagerInterface $em,
+        MailerInterface $mailer,
+        Request $request
+    ): Response
+    {
+        // Security: Ensure user owns the contract
+        if ($contract->getStudent() !== $this->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Logic: Can only request if currently filled by tutor (Status 1)
+        if ($contract->getStatus() !== Contract::STATUS_FILLED_BY_TUTOR) {
+            $this->addFlash('error', 'La convention ne peut pas être soumise à validation pour le moment.');
+            return $this->redirectToRoute('app_student_contract_index');
+        }
+
+        if ($this->isCsrfTokenValid('request_approval'.$contract->getId(), $request->request->get('_token'))) {
+
+            // 1. Change Status
+            $contract->setStatus(Contract::STATUS_APPROVAL_REQUESTED);
+            $em->flush();
+
+            // 2. Find Professors (via Session -> Level -> ReferentProfessors)
+            $session = $contract->getSession();
+            $level = $session ? $session->getLevel() : null;
+            $professors = $level ? $level->getReferentProfessors() : [];
+
+            $emailsSent = 0;
+
+            foreach ($professors as $professor) {
+                if ($professor->getEmail()) {
+                    // 3. Send Email to each professor
+                    $email = (new TemplatedEmail())
+                        ->from(new Address('stages@conventio.com', 'Conventio'))
+                        ->to($professor->getEmail())
+                        ->subject('Validation requise : Convention de ' . $contract->getStudent()->getFullName())
+                        ->htmlTemplate('emails/professor_approval_request.html.twig')
+                        ->context([
+                            'contract' => $contract,
+                            'professor' => $professor,
+                            'student' => $contract->getStudent()
+                        ]);
+
+                    $mailer->send($email);
+                    $emailsSent++;
+                }
+            }
+
+            if ($emailsSent > 0) {
+                $this->addFlash('success', 'La demande de validation a été envoyée aux professeurs référents.');
+            } else {
+                $this->addFlash('warning', 'Convention soumise, mais aucun professeur référent n\'a été trouvé pour l\'envoi du mail.');
+            }
+        }
+
+        return $this->redirectToRoute('app_student_contract_index');
     }
 }

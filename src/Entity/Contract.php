@@ -10,6 +10,14 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ContractRepository::class)]
 class Contract
 {
+    public const STATUS_STARTED = 0;
+    public const STATUS_FILLED_BY_TUTOR = 1;
+    public const STATUS_APPROVAL_REQUESTED = 2;
+    public const STATUS_APPROVED_PROF = 3;
+    public const STATUS_SIGNATURE_REQUESTED = 4;
+    public const STATUS_SIGNED = 5;
+    public const STATUS_CANCELLED = 6;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

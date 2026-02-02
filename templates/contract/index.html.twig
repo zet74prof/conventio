@@ -74,7 +74,11 @@
                                         </span>
                                     {% elseif contract.status == 2 %}
                                         <span class="badge bg-success">
-                                            <i class="bi bi-check-circle me-1"></i> {% trans %}Validée{% endtrans %}
+                                            <i class="bi bi-check-circle me-1"></i> {% trans %}En cours de validation{% endtrans %}
+                                        </span>
+                                    {% elseif contract.status == 3 %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle me-1"></i> {% trans %}Validée par professeur référent{% endtrans %}
                                         </span>
                                     {% else %}
                                         <span class="badge bg-secondary">
@@ -84,9 +88,15 @@
                                 </td>
                                 <td class="text-end">
                                     {# Add view/download buttons here later #}
-                                    <button class="btn btn-sm btn-outline-secondary" disabled title="{% trans %}Détails (Bientôt){% endtrans %}">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
+                                    {% if contract.status == 1 %}
+                                        <form method="post" action="{{ path('app_student_contract_request_approval', {'id': contract.id}) }}" onsubmit="return confirm('{% trans %}Êtes-vous sûr de vouloir soumettre cette convention pour validation ?{% endtrans %}');" style="display: inline-block;">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('request_approval' ~ contract.id) }}">
+                                            <button class="btn btn-sm btn-primary" title="{% trans %}Demander validation{% endtrans %}">
+                                                <i class="bi bi-send-check"></i> {% trans %}Valider{% endtrans %}
+                                            </button>
+                                        </form>
+                                    {% endif %}
+
                                     <a href="{{ path('app_contract_pdf_download', {id: contract.id}) }}" class="btn btn-sm btn-outline-danger" target="_blank">
                                         <i class="bi bi-file-pdf"></i> PDF
                                     </a>
