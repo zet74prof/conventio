@@ -84,6 +84,16 @@
         }
 
         /* Signatures */
+        /* YOUSIGN ANCHORS STYLE */
+        /* Must be white to be invisible, but large enough to be detected */
+        .yousign-anchor {
+            color: #ffffff;      /* Invisible on white paper */
+            font-size: 12px;     /* Recommended size (10-14px) */
+            font-family: Arial, sans-serif; /* Recommended font */
+            display: block;      /* Ensure it sits nicely */
+            margin-top: 10px;
+        }
+
         .signatures {
             margin-top: 50px;
             width: 100%;
@@ -92,7 +102,7 @@
         .sig-block {
             float: left;
             width: 33%;
-            height: 120px;
+            height: 150px;
             font-size: 10pt;
         }
 
@@ -242,21 +252,42 @@
     </p>
 </div>
 
-{# Signatures #}
+{# SIGNATURES SECTION WITH SMART ANCHORS #}
 <div class="signatures">
+
+    {# Signer 1: Student (s1) #}
     <div class="sig-block">
         <strong>Le Stagiaire</strong><br>
-        <small>(Lu et approuvé)</small><br><br><br>
-        Signé
+        <small>(Lu et approuvé)</small><br>
+
+        {# Anchor: s1 = 1st signer added in API, signature type, 150x60 pixels #}
+        <span class="yousign-anchor">
+                {{ '{{s1|signature|150|60}}' }}
+            </span>
     </div>
+
+    {# Signer 2: Organisation (s2) #}
     <div class="sig-block" style="text-align: center;">
         <strong>L'Organisme d'Accueil</strong><br>
-        <small>(Cachet et signature)</small><br><br><br>
+        <small>(Cachet et signature)</small><br>
+
+        {# Anchor: s2 = 2nd signer added in API #}
+        <span class="yousign-anchor">
+                {{ '{{s2|signature|150|60}}' }}
+            </span>
     </div>
+
+    {# Signer 3: School Director (s3) #}
     <div class="sig-block" style="text-align: right;">
         <strong>L'Établissement</strong><br>
-        <small>(Le Directeur)</small><br><br><br>
+        <small>(Le Directeur)</small><br>
+
+        {# Anchor: s3 = 3rd signer added in API #}
+        <span class="yousign-anchor">
+                {{ '{{s3|signature|150|60}}' }}
+            </span>
     </div>
+
 </div>
 
 {# Footer #}
