@@ -46,6 +46,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private bool $isVerified = false;
 
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $mobilePhone = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -164,6 +167,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getMobilePhone(): ?string
+    {
+        return $this->mobilePhone;
+    }
+
+    public function setMobilePhone(?string $mobilePhone): static
+    {
+        $this->mobilePhone = $mobilePhone;
 
         return $this;
     }

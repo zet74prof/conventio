@@ -7,6 +7,7 @@ use App\Entity\Student;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,6 +20,11 @@ class StudentProfileType extends AbstractType
                 'label' => 'Email personnel',
                 'required' => false,
                 'attr' => ['placeholder' => 'ex: mon.email@gmail.com'],
+            ])
+            ->add('mobilePhone', TelType::class, [
+                'label' => 'Numéro de téléphone',
+                'required' => false,
+                'attr' => ['placeholder' => 'ex: +33612345678'],
             ])
             ->add('level', EntityType::class, [
                 'class' => Level::class,

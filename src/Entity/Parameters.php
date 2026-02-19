@@ -34,6 +34,12 @@ class Parameters
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $professorEmailDomain;
 
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $provisorMobilePhone = null;
+
+    #[ORM\Column(length: 3000, nullable: true)]
+    private ?string $schoolAddress = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -118,6 +124,30 @@ class Parameters
     public function setProfessorEmailDomain(?string $professorEmailDomain): static
     {
         $this->professorEmailDomain = $professorEmailDomain;
+        return $this;
+    }
+
+    public function getProvisorMobilePhone(): ?string
+    {
+        return $this->provisorMobilePhone;
+    }
+
+    public function setProvisorMobilePhone(?string $provisorMobilePhone): static
+    {
+        $this->provisorMobilePhone = $provisorMobilePhone;
+
+        return $this;
+    }
+
+    public function getSchoolAddress(): ?string
+    {
+        return $this->schoolAddress;
+    }
+
+    public function setSchoolAddress(?string $schoolAddress): static
+    {
+        $this->schoolAddress = $schoolAddress;
+
         return $this;
     }
 }

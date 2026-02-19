@@ -47,4 +47,34 @@ class GotenbergPdfService
 
         return $response->getContent();
     }
+
+    /**
+     * Converts an Office document (docx, xlsx) to PDF
+     */
+    public function convertOfficeDocument(string $filePath): string
+    {
+        // Gotenberg expects the file field name to be 'files'
+        $formFields = [
+            'files' => DataPart::fromPath($filePath),
+            // 'landscape' => 'true', // Optional if needed
+        ];
+
+        $formData = new FormDataPart($formFields);
+        $headers = $formData->getPreparedHeaders()->toArray();
+
+        $response = $this->client->request(
+            'POST',
+            $this->gotenbergUrl . '/forms/libreoffice/convert',
+            [
+                'headers' => $headers,
+                'body' => $formData->bodyToIterable(),
+            ]
+        );
+
+        if ($response->getStatusCode() !== 200) {
+            throw new \RuntimeException('Error converting document: ' . $response->getContent(false));
+        }
+
+        return $response->getContent();
+    }
 }

@@ -91,6 +91,12 @@ class Contract
     #[ORM\ManyToOne(inversedBy: 'contracts', cascade: ['persist'])]
     private ?Organisation $organisation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $signatureRequestId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $signedContractPath = null;
+
     public function __construct()
     {
         $this->contractDates = new ArrayCollection();
@@ -367,6 +373,30 @@ class Contract
     public function setOrganisation(?Organisation $organisation): static
     {
         $this->organisation = $organisation;
+
+        return $this;
+    }
+
+    public function getSignatureRequestId(): ?string
+    {
+        return $this->signatureRequestId;
+    }
+
+    public function setSignatureRequestId(?string $signatureRequestId): static
+    {
+        $this->signatureRequestId = $signatureRequestId;
+
+        return $this;
+    }
+
+    public function getSignedContractPath(): ?string
+    {
+        return $this->signedContractPath;
+    }
+
+    public function setSignedContractPath(?string $signedContractPath): static
+    {
+        $this->signedContractPath = $signedContractPath;
 
         return $this;
     }
