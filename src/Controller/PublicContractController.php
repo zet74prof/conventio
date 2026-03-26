@@ -63,7 +63,8 @@ class PublicContractController extends AbstractController
                 $existingOrg->setCountryHq($submittedOrg->getCountryHq());
                 $existingOrg->setWebsite($submittedOrg->getWebsite());
 
-                $existingOrg->setRespName($submittedOrg->getRespName());
+                $existingOrg->setRespFirstname($submittedOrg->getRespFirstname());
+                $existingOrg->setRespLastname($submittedOrg->getRespLastname());
                 $existingOrg->setRespFunction($submittedOrg->getRespFunction());
                 $existingOrg->setRespEmail($submittedOrg->getRespEmail());
                 $existingOrg->setRespPhone($submittedOrg->getRespPhone());

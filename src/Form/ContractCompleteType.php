@@ -22,7 +22,6 @@ class ContractCompleteType extends AbstractType
             ])
 
             // 2. Internship Location
-            // ADD THIS CHECKBOX
             ->add('sameAddress', CheckboxType::class, [
                 'mapped' => false, // Not stored in DB directly
                 'label' => 'L\'adresse du stage est identique au siège de l\'organisme',
@@ -30,6 +29,7 @@ class ContractCompleteType extends AbstractType
                 'attr' => ['class' => 'form-check-input js-same-address-toggle'],
             ])
 
+            ->add('placeNameInternship', TextType::class, ['label' => 'Lieu du stage', 'required' => false])
             ->add('addressInternship', TextType::class, ['label' => 'Adresse du stage', 'required' => false])
             ->add('postalCodeInternship', TextType::class, ['label' => 'Code Postal', 'required' => false])
             ->add('cityInternship', TextType::class, ['label' => 'Ville', 'required' => false])

@@ -27,6 +27,9 @@ class Contract
     private ?int $status = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    private ?string $placeNameInternship = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $addressInternShip = null;
 
     #[ORM\Column(length: 15, nullable: true)]
@@ -117,6 +120,16 @@ class Contract
         $this->status = $status;
 
         return $this;
+    }
+
+    public function getPlaceNameInternship(): ?string
+    {
+        return $this->placeNameInternship;
+    }
+
+    public function setPlaceNameInternship(?string $placeNameInternship): void
+    {
+        $this->placeNameInternship = $placeNameInternship;
     }
 
     public function getAddressInternShip(): ?string

@@ -16,6 +16,9 @@ class Tutor extends User
     #[ORM\Column(length: 15, nullable: true)]
     private ?string $telOther = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $workFunction = null;
+
     /**
      * @var Collection<int, Contract>
      */
@@ -49,6 +52,16 @@ class Tutor extends User
         $this->telOther = $telOther;
 
         return $this;
+    }
+
+    public function getWorkFunction(): ?string
+    {
+        return $this->workFunction;
+    }
+
+    public function setWorkFunction(?string $workFunction): void
+    {
+        $this->workFunction = $workFunction;
     }
 
     /**

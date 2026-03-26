@@ -4,10 +4,10 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = [
         // Source Fields (HQ)
-        "hqAddress", "hqZip", "hqCity", "hqCountry",
+        "hqPlaceName", "hqAddress", "hqZip", "hqCity", "hqCountry",
 
         // Destination Fields (Internship)
-        "jobAddress", "jobZip", "jobCity", "jobCountry",
+        "jobPlaceName", "jobAddress", "jobZip", "jobCity", "jobCountry",
 
         // UI Elements
         "container", "checkbox"
@@ -35,6 +35,7 @@ export default class extends Controller {
     }
 
     copy() {
+        this.jobPlaceNameTarget.value = this.hqPlaceNameTarget.value;
         this.jobAddressTarget.value = this.hqAddressTarget.value;
         this.jobZipTarget.value = this.hqZipTarget.value;
         this.jobCityTarget.value = this.hqCityTarget.value;

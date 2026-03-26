@@ -92,14 +92,13 @@
                                         <form method="post" action="{{ path('app_student_contract_request_approval', {'id': contract.id}) }}" onsubmit="return confirm('{% trans %}Êtes-vous sûr de vouloir soumettre cette convention pour validation ?{% endtrans %}');" style="display: inline-block;">
                                             <input type="hidden" name="_token" value="{{ csrf_token('request_approval' ~ contract.id) }}">
                                             <button class="btn btn-sm btn-primary" title="{% trans %}Demander validation{% endtrans %}">
-                                                <i class="bi bi-send-check"></i> {% trans %}Valider{% endtrans %}
+                                                <i class="bi bi-send-check"></i> {% trans %}Demander validation{% endtrans %}
                                             </button>
                                         </form>
+                                        <a href="{{ path('app_contract_pdf_download_docx', {id: contract.id}) }}" class="btn btn-sm btn-outline-danger" target="_blank">
+                                            <i class="bi bi-file-pdf"></i> PDF
+                                        </a>
                                     {% endif %}
-
-                                    <a href="{{ path('app_contract_pdf_download_docx', {id: contract.id}) }}" class="btn btn-sm btn-outline-danger" target="_blank">
-                                        <i class="bi bi-file-pdf"></i> PDF
-                                    </a>
                                 </td>
                             </tr>
                         {% else %}

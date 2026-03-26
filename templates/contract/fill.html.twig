@@ -31,7 +31,13 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        {{ form_widget(form.organisation.name, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+                                        {{ form_widget(form.organisation.name, {
+                                            'attr': {
+                                                'class': 'form-control',
+                                                'placeholder': 'Nom',
+                                                'data-address-copy-target': 'hqPlaceName',
+                                                'data-action': 'input->address-copy#sync'
+                                            }}) }}
                                         {{ form_label(form.organisation.name) }}
                                         {{ form_errors(form.organisation.name) }}
                                     </div>
@@ -45,7 +51,11 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        {{ form_widget(form.organisation.website, {'attr': {'class': 'form-control', 'placeholder': 'Site Web'}}) }}
+                                        {{ form_widget(form.organisation.website, {
+                                            'attr': {
+                                                'class': 'form-control',
+                                                'placeholder': 'Site Web'
+                                            }}) }}
                                         {{ form_label(form.organisation.website) }}
                                         {{ form_errors(form.organisation.website) }}
                                     </div>
@@ -120,9 +130,16 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating">
-                                        {{ form_widget(form.organisation.respName, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
-                                        {{ form_label(form.organisation.respName) }}
-                                        {{ form_errors(form.organisation.respName) }}
+                                        {{ form_widget(form.organisation.respLastname, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+                                        {{ form_label(form.organisation.respLastname) }}
+                                        {{ form_errors(form.organisation.respLastname) }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form_widget(form.organisation.respFirstname, {'attr': {'class': 'form-control', 'placeholder': 'Prénom'}}) }}
+                                        {{ form_label(form.organisation.respFirstname) }}
+                                        {{ form_errors(form.organisation.respFirstname) }}
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -150,7 +167,7 @@
 
                             <hr class="my-4 text-muted">
 
-                            <h6 class="text-secondary text-uppercase fs-7 mb-3">{% trans %}Assurance Responsabilité Civile{% endtrans %}</h6>
+                            <h6 class="text-secondary text-uppercase fs-7 mb-3">{% trans %}Assurance{% endtrans %}</h6>
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="form-floating">
@@ -195,6 +212,13 @@
                             {# Destination Container #}
                             <div id="internship-address-fields" data-address-copy-target="container">
                                 <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            {{ form_widget(form.placeNameInternship, {'attr': {'class': 'form-control', 'placeholder': 'Lieu du stage', 'data-address-copy-target': 'jobPlaceName'}}) }}
+                                            {{ form_label(form.placeNameInternship) }}
+                                            {{ form_errors(form.placeNameInternship) }}
+                                        </div>
+                                    </div>
                                     <div class="col-12">
                                         <div class="form-floating">
                                             {{ form_widget(form.addressInternship, {'attr': {'class': 'form-control', 'placeholder': 'Adresse', 'data-address-copy-target': 'jobAddress'}}) }}

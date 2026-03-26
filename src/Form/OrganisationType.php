@@ -26,13 +26,14 @@ class OrganisationType extends AbstractType
             ->add('countryHq', TextType::class, ['label' => 'Pays'])
 
             // Responsible
-            ->add('respName', TextType::class, ['label' => 'Nom du responsable'])
+            ->add('respLastname', TextType::class, ['label' => 'Nom du responsable'])
+            ->add('respFirstname', TextType::class, ['label' => 'Prénom du responsable'])
             ->add('respFunction', TextType::class, ['label' => 'Fonction'])
             ->add('respEmail', EmailType::class, ['label' => 'Email'])
             ->add('respPhone', TextType::class, ['label' => 'Téléphone'])
 
             // Insurance
-            ->add('insuranceName', TextType::class, ['label' => 'Nom de l\'assurance RC'])
+            ->add('insuranceName', TextType::class, ['label' => 'Nom de l\'assurance'])
             ->add('insuranceContract', TextType::class, ['label' => 'Numéro de contrat'])
         ;
     }

@@ -142,7 +142,8 @@ profile.update.success: "Your profile has been updated successfully."
 "Pays": "Country"
 
 # Responsible / Signatory
-"Nom du responsable": "Responsible Name"
+"Nom du responsable": "Responsible Lastname"
+"Prénom du responsable": "Responsible Firstname"
 "Fonction": "Position / Function"
 "Téléphone": "Phone"
 

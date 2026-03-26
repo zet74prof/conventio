@@ -17,7 +17,7 @@ class ContractDocumentService
     public function generateContractPdf(Contract $contract): string
     {
         // 1. Load the Template
-        $templatePath = $this->projectDir . '/assets/docs/convention-template.docx';
+        $templatePath = $this->projectDir . '/assets/docs/convention-template-fr.docx';
         $templateProcessor = new TemplateProcessor($templatePath);
 
         // 2. Simple Variable Replacement
@@ -27,8 +27,12 @@ class ContractDocumentService
         $tutor = $contract->getTutor();
         $session = $contract->getSession();
 
-        //$templateProcessor->setValue('student_fullname', $student->getFullName());
-        //$templateProcessor->setValue('student_email', $student->getPersonalEmail());
+        $templateProcessor->setValue('levelCode', $student->getLevel()->getLevelCode());
+        $templateProcessor->setValue('levelName', $student->getLevel()->getLevelName());
+
+        $templateProcessor->setValue('studentLastname', $student->getLastname());
+        $templateProcessor->setValue('studentFirstname', $student->getFirstname());
+        $templateProcessor->setValue('student_email', $student->getPersonalEmail());
 
         $templateProcessor->setValue('organisationName', $org->getName());
         $templateProcessor->setValue('addressHq', $org->getAddressHq());
@@ -36,7 +40,9 @@ class ContractDocumentService
         $templateProcessor->setValue('cityHq', $org->getCityHq());
         $templateProcessor->setValue('countryHq', $org->getCountryHq());
         $templateProcessor->setValue('siret', $org->getSiret());
-        $templateProcessor->setValue('respName', $org->getRespName());
+        $templateProcessor->setValue('respFirstname', $org->getRespFirstname());
+        $templateProcessor->setValue('respLastname', $org->getRespLastname());
+        $templateProcessor->setValue('respPhone', $org->getRespPhone());
         $templateProcessor->setValue('respEmail', $org->getRespEmail());
         $templateProcessor->setValue('website', $org->getWebsite());
         $templateProcessor->setValue('addressInternship', $contract->getAddressInternShip());
@@ -49,11 +55,12 @@ class ContractDocumentService
         $templateProcessor->setValue('tutorName', $tutor ? $tutor->getFullName() : 'Non assigné');
         $templateProcessor->setValue('tutorPhone', $tutor ? $tutor->getTelMobile() : 'Non assigné');
         $templateProcessor->setValue('tutorEmail', $tutor ? $tutor->getEmail() : 'Non assigné');
+        $templateProcessor->setValue('tutorFunction', $tutor ? $tutor->getWorkFunction() : 'Non assigné');
 
         $templateProcessor->setValue('start_date', $session->getSessionDates()->first()?->getStartDate()->format('d/m/Y') ?? '--');
         $templateProcessor->setValue('end_date', $session->getSessionDates()->first()?->getEndDate()->format('d/m/Y') ?? '--');
 
-        //$templateProcessor->setValue('activities', $contract->getPlannedActivities());
+        $templateProcessor->setValue('plannedActivities', $contract->getPlannedActivities());
 
         // Logistical Checkboxes (Example: replace with "OUI" or "NON")
         //$templateProcessor->setValue('gratification', $contract->isBonus() ? 'OUI' : 'NON');

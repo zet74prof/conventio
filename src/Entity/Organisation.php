@@ -37,7 +37,10 @@ class Organisation
     private ?string $siret = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $respName = null;
+    private ?string $respFirstname = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $respLastname = null;
 
     #[ORM\Column(length: 255)]
     private ?string $respFunction = null;
@@ -154,14 +157,26 @@ class Organisation
         return $this;
     }
 
-    public function getRespName(): ?string
+    public function getRespFirstname(): ?string
     {
-        return $this->respName;
+        return $this->respFirstname;
     }
 
-    public function setRespName(string $respName): static
+    public function setRespFirstname(string $respFirstname): static
     {
-        $this->respName = $respName;
+        $this->respFirstname = $respFirstname;
+
+        return $this;
+    }
+
+    public function getRespLastname(): ?string
+    {
+        return $this->respLastname;
+    }
+
+    public function setRespLastname(string $respLastname): static
+    {
+        $this->respLastname = $respLastname;
 
         return $this;
     }
