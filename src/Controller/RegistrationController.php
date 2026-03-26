@@ -28,7 +28,7 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParametersRepository $paramsRepo, TranslatorInterface $translator): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, ParametersRepository $paramsRepo, TranslatorInterface $translator, string $mailerFromEmail): Response
     {
         // 1. Fetch parameters for validation logic
         $params = $paramsRepo->findOneBy([]) ?? new Parameters();
@@ -83,7 +83,7 @@ class RegistrationController extends AbstractController
             // generate a signed url and email it to the user
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
                 (new TemplatedEmail())
-                    ->from(new Address('sio@lycee-faure.fr', 'Conventio Bot'))
+                    ->from(new Address($mailerFromEmail, 'Conventio Bot'))
                     ->to((string) $user->getEmail())
                     ->subject($translator->trans('register.email.subject'))
                     ->htmlTemplate('registration/confirmation_email.html.twig')
