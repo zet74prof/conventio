@@ -3,7 +3,10 @@
 {% block title %}{% trans %}Inscription{% endtrans %}{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
+    <div class="container mt-5" {{ stimulus_controller('registration-validation', {
+        studentDomain: studentDomain,
+        profDomain: profDomain
+    }) }}>
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card shadow-sm">
@@ -18,12 +21,6 @@
                         {% for flash_danger in app.flashes('danger') %}
                             <div class="alert alert-danger" role="alert">{{ flash_danger }}</div>
                         {% endfor %}
-
-                        {# 1. Pass allowed domains as data attributes to the form #}
-                        <div id="registration-config"
-                             data-student-domain="{{ studentDomain }}"
-                             data-prof-domain="{{ profDomain }}">
-                        </div>
 
                         {{ form_start(registrationForm, {'attr': {'id': 'registration-form', 'novalidate': 'novalidate'}}) }}
                         <div class="row">
@@ -47,15 +44,16 @@
                             {{ form_widget(registrationForm.email, {
                                 'attr': {
                                     'class': 'form-control',
-                                    'id': 'email-input',
                                     'placeholder': 'name@example.com',
                                     'autocomplete': 'email',
+                                    'data-registration-validation-target': 'email',
+                                    'data-action': 'input->registration-validation#validate'
                                 }
                             }) }}
                             {{ form_label(registrationForm.email, 'Email'|trans) }}
 
                             {# Custom JS Error Message #}
-                            <div id="email-domain-error" class="text-danger mt-2 small" style="display: none;">
+                            <div id="email-domain-error" class="text-danger mt-2 small" style="display: none;" data-registration-validation-target="error">
                                 <i class="bi bi-exclamation-circle"></i>
                                 {% trans %}L'adresse email doit se terminer par{% endtrans %}
                                 <strong>{{ studentDomain }}</strong> {% trans %}ou{% endtrans %} <strong>{{ profDomain }}</strong>.
@@ -77,7 +75,7 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" id="submit-btn" class="btn btn-primary btn-lg" disabled>
+                            <button type="submit" id="submit-btn" class="btn btn-primary btn-lg" disabled data-registration-validation-target="submit">
                                 {% trans %}S'inscrire{% endtrans %}
                             </button>
                         </div>
@@ -91,43 +89,4 @@
             </div>
         </div>
     </div>
-
-    {# 3. JavaScript for Real-time Validation #}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const config = document.getElementById('registration-config');
-            const studentDomain = config.dataset.studentDomain;
-            const profDomain = config.dataset.profDomain;
-
-            const emailInput = document.getElementById('registration_form_email');
-            const errorMsg = document.getElementById('email-domain-error');
-            const submitBtn = document.getElementById('submit-btn');
-
-            function validateEmail() {
-                const email = emailInput.value.trim();
-                if (!email) {
-                    errorMsg.style.display = 'none';
-                    submitBtn.disabled = true;
-                    return;
-                }
-
-                const isValid = email.endsWith(studentDomain) || email.endsWith(profDomain);
-
-                if (isValid) {
-                    errorMsg.style.display = 'none';
-                    emailInput.classList.remove('is-invalid');
-                    emailInput.classList.add('is-valid');
-                    submitBtn.disabled = false;
-                } else {
-                    errorMsg.style.display = 'block';
-                    emailInput.classList.add('is-invalid');
-                    emailInput.classList.remove('is-valid');
-                    submitBtn.disabled = true;
-                }
-            }
-
-            // Validate on typing
-            emailInput.addEventListener('input', validateEmail);
-        });
-    </script>
 {% endblock %}
