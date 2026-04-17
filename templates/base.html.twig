@@ -28,6 +28,29 @@
             </ul>
             <ul class="navbar-nav ms-auto">
                 {% if app.user %}
+                    {# PROFESSOR SECTION - Only visible to Professors #}
+                    {% if is_granted('ROLE_PROFESSOR') %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="profDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-mortarboard-fill"></i> {% trans %}Enseignant{% endtrans %}
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="profDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('app_professor_students') }}">
+                                        <i class="bi bi-people-fill me-2 text-primary"></i>
+                                        {% trans %}Mes Étudiants{% endtrans %}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ path('app_professor_contract_index') }}">
+                                        <i class="bi bi-card-checklist me-2 text-primary"></i>
+                                        {% trans %}Conventions à valider{% endtrans %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
                     {# ADMIN SECTION - Only visible to Admins #}
                     {% if is_granted('ROLE_ADMIN') %}
                         <li class="nav-item dropdown">
@@ -41,14 +64,6 @@
                                     <a class="dropdown-item" href="{{ path('app_level_index') }}">
                                         <i class="bi bi-mortarboard me-2 text-primary"></i>
                                         {% trans %}Formations{% endtrans %}
-                                    </a>
-                                </li>
-
-                                {# 2. Sessions #}
-                                <li>
-                                    <a class="dropdown-item" href="{{ path('app_session_index') }}">
-                                        <i class="bi bi-calendar-range me-2 text-primary"></i>
-                                        {% trans %}Sessions{% endtrans %}
                                     </a>
                                 </li>
 

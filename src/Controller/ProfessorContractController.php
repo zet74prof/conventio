@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Contract;
 use App\Entity\Professor;
 use App\Repository\ContractRepository;
+use App\Repository\LevelRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,23 +17,41 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_PROFESSOR')]
 class ProfessorContractController extends AbstractController
 {
+    private const STATUS_LABELS = [
+        Contract::STATUS_STARTED => 'Initié',
+        Contract::STATUS_FILLED_BY_TUTOR => 'Rempli par tuteur',
+        Contract::STATUS_APPROVAL_REQUESTED => 'En attente de validation',
+        Contract::STATUS_APPROVED_PROF => 'Validé par prof',
+        Contract::STATUS_SIGNATURE_REQUESTED => 'En cours de signature',
+        Contract::STATUS_SIGNED => 'Signé',
+        Contract::STATUS_CANCELLED => 'Annulé'
+    ];
+
+    private const STATUS_COLORS = [
+        Contract::STATUS_STARTED => 'secondary',
+        Contract::STATUS_FILLED_BY_TUTOR => 'info',
+        Contract::STATUS_APPROVAL_REQUESTED => 'warning',
+        Contract::STATUS_APPROVED_PROF => 'primary',
+        Contract::STATUS_SIGNATURE_REQUESTED => 'info',
+        Contract::STATUS_SIGNED => 'success',
+        Contract::STATUS_CANCELLED => 'danger'
+    ];
+
     #[Route('/', name: 'app_professor_contract_index')]
     public function index(ContractRepository $contractRepo): Response
     {
         /** @var Professor $professor */
         $professor = $this->getUser();
 
-        // Retrieve all contracts
-        // Note: For performance optimization, a custom DQL query in repository would be better
-        // e.g., JOIN contract.session s JOIN s.level l JOIN l.referentProfessors p WHERE p = :professor
         $allContracts = $contractRepo->findAll();
         $toReview = [];
 
         foreach ($allContracts as $contract) {
-            $level = $contract->getSession()->getLevel();
+            $internshipDate = $contract->getInternshipDate();
+            $level = $internshipDate ? $internshipDate->getLevel() : null;
 
-            // Check if the current professor is in the collection of referents for this level
             if (
+                $level &&
                 $contract->getStatus() === Contract::STATUS_APPROVAL_REQUESTED &&
                 $level->getReferentProfessors()->contains($professor)
             ) {
@@ -45,15 +64,31 @@ class ProfessorContractController extends AbstractController
         ]);
     }
 
+    #[Route('/students', name: 'app_professor_students')]
+    public function students(LevelRepository $levelRepo): Response
+    {
+        /** @var Professor $professor */
+        $professor = $this->getUser();
+
+        $levels = $levelRepo->findLevelsWithStudentsAndContracts($professor);
+
+        return $this->render('contract/professor_students.html.twig', [
+            'levels' => $levels,
+            'statusLabels' => self::STATUS_LABELS,
+            'statusColors' => self::STATUS_COLORS,
+        ]);
+    }
+
     #[Route('/{id}/review', name: 'app_professor_contract_review')]
     public function review(Contract $contract, Request $request, EntityManagerInterface $em): Response
     {
         /** @var Professor $professor */
         $professor = $this->getUser();
 
-        // Security Check: Is this professor authorized for this Level?
-        $level = $contract->getSession()->getLevel();
-        if (!$level->getReferentProfessors()->contains($professor)) {
+        $internshipDate = $contract->getInternshipDate();
+        $level = $internshipDate ? $internshipDate->getLevel() : null;
+        
+        if (!$level || !$level->getReferentProfessors()->contains($professor)) {
             throw $this->createAccessDeniedException('Vous n\'êtes pas référent pour cette formation.');
         }
 
@@ -61,9 +96,8 @@ class ProfessorContractController extends AbstractController
             if ($request->request->has('approve')) {
                 $contract->setStatus(Contract::STATUS_APPROVED_PROF);
                 $this->addFlash('success', 'La convention a été validée.');
-                // Optional: Generate PDF / Send to signature workflow
             } elseif ($request->request->has('reject')) {
-                $contract->setStatus(Contract::STATUS_FILLED_BY_TUTOR); // Return to previous step
+                $contract->setStatus(Contract::STATUS_FILLED_BY_TUTOR);
                 $this->addFlash('warning', 'La convention a été refusée et renvoyée à l\'étudiant.');
             }
             $em->flush();

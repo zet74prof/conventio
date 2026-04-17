@@ -30,7 +30,7 @@
                     <table class="table table-hover table-striped mb-0 align-middle">
                         <thead class="table-light">
                         <tr>
-                            <th>{% trans %}Session / Formation{% endtrans %}</th>
+                            <th>{% trans %}Dates / Formation{% endtrans %}</th>
                             <th>{% trans %}Entreprise{% endtrans %}</th>
                             <th>{% trans %}Tuteur{% endtrans %}</th>
                             <th class="text-center">{% trans %}Statut{% endtrans %}</th>
@@ -41,8 +41,9 @@
                         {% for contract in contracts %}
                             <tr>
                                 <td>
-                                    {% if contract.session %}
-                                        <span class="badge bg-secondary">{{ contract.session.level.levelName }}</span>
+                                    {% if contract.internshipDate %}
+                                        <div class="fw-bold">{{ contract.internshipDate.startDate|date('d/m/Y') }} - {{ contract.internshipDate.endDate|date('d/m/Y') }}</div>
+                                        <span class="badge bg-secondary">{{ contract.internshipDate.level.levelName }}</span>
                                     {% else %}
                                         <span class="text-muted small">{% trans %}Non assignée{% endtrans %}</span>
                                     {% endif %}

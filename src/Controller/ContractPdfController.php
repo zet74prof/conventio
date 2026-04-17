@@ -39,10 +39,9 @@ class ContractPdfController extends AbstractController
         // Render the HTML Template
         $html = $this->renderView('contract/pdf_template.html.twig', [
             'contract' => $contract,
-            'student' => $contract->getStudent(),
+            'internshipDate' => $contract->getInternshipDate(),
             'organisation' => $contract->getOrganisation(),
             'tutor' => $contract->getTutor(),
-            'session' => $contract->getSession(),
             'workHours' => $workHours
         ]);
 

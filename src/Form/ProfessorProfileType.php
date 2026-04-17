@@ -23,7 +23,6 @@ class ProfessorProfileType extends AbstractType
             ->add('levels', EntityType::class, [
                 'class' => Level::class,
                 'choice_label' => 'levelName',
-                'label' => 'Classes accessibles',
                 'multiple' => true,
                 'expanded' => false, // Set to true if you prefer checkboxes
                 'by_reference' => false, // Important for ManyToMany!

@@ -25,7 +25,7 @@ class ContractDocumentService
         $student = $contract->getStudent();
         $org = $contract->getOrganisation();
         $tutor = $contract->getTutor();
-        $session = $contract->getSession();
+        $internshipDate = $contract->getInternshipDate();
 
         $templateProcessor->setValue('levelCode', $student->getLevel()->getLevelCode());
         $templateProcessor->setValue('levelName', $student->getLevel()->getLevelName());
@@ -57,8 +57,8 @@ class ContractDocumentService
         $templateProcessor->setValue('tutorEmail', $tutor ? $tutor->getEmail() : 'Non assigné');
         $templateProcessor->setValue('tutorFunction', $tutor ? $tutor->getWorkFunction() : 'Non assigné');
 
-        $templateProcessor->setValue('start_date', $session->getSessionDates()->first()?->getStartDate()->format('d/m/Y') ?? '--');
-        $templateProcessor->setValue('end_date', $session->getSessionDates()->first()?->getEndDate()->format('d/m/Y') ?? '--');
+        $templateProcessor->setValue('start_date', $internshipDate?->getStartDate()?->format('d/m/Y') ?? '--');
+        $templateProcessor->setValue('end_date', $internshipDate?->getEndDate()?->format('d/m/Y') ?? '--');
 
         $templateProcessor->setValue('plannedActivities', $contract->getPlannedActivities());
 

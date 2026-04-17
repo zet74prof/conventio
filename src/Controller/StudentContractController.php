@@ -5,9 +5,7 @@ namespace App\Controller;
 use App\Entity\Contract;
 use App\Entity\Student;
 use App\Entity\Tutor;
-use App\Entity\User;
 use App\Form\ContractInitiateType;
-use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -40,7 +38,6 @@ class StudentContractController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         MailerInterface $mailer,
-        SessionRepository $sessionRepo,
         UserRepository $userRepo
     ): Response
     {
@@ -56,24 +53,11 @@ class StudentContractController extends AbstractController
         $contract = new Contract();
         $contract->setStudent($student);
 
-        // 2. Assign Session
-        // Note: Logic assumes you have added 'active' to Session as discussed previously
         $level = $student->getLevel();
-        if ($level) {
-            // Find active session for this level
-            // Ideally: $sessionRepo->findOneBy(['level' => $level, 'active' => true]);
-            // Fallback if 'active' not yet implemented:
-            $session = $sessionRepo->findOneBy(['level' => $level], ['id' => 'DESC']);
 
-            if ($session) {
-                $contract->setSession($session);
-            } else {
-                $this->addFlash('error', 'Aucune session trouvée pour votre formation.');
-                return $this->redirectToRoute('app_student_contract_index');
-            }
-        }
-
-        $form = $this->createForm(ContractInitiateType::class, $contract);
+        $form = $this->createForm(ContractInitiateType::class, $contract, [
+            'level' => $level
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -98,8 +82,6 @@ class StudentContractController extends AbstractController
                 $tutor->setEmail($tutorEmail);
                 $tutor->setFirstname($tutorFirstname);
                 $tutor->setLastname($tutorLastname);
-                // Set dummy password or leave null (User.php password is nullable)
-                // $tutor->setPassword(...);
                 $tutor->setIsVerified(false);
                 $em->persist($tutor);
 
@@ -110,7 +92,7 @@ class StudentContractController extends AbstractController
             $token = Uuid::v4()->toBase58();
             $contract->setSharingToken($token);
             $contract->setTokenExpDate(new \DateTime('+7 days'));
-            $contract->setStatus(0); // 0 = STARTED
+            $contract->setStatus(Contract::STATUS_STARTED);
 
             $em->persist($contract);
             $em->flush();
@@ -164,9 +146,9 @@ class StudentContractController extends AbstractController
             $contract->setStatus(Contract::STATUS_APPROVAL_REQUESTED);
             $em->flush();
 
-            // 2. Find Professors (via Session -> Level -> ReferentProfessors)
-            $session = $contract->getSession();
-            $level = $session ? $session->getLevel() : null;
+            // 2. Find Professors (via InternshipDate -> Level -> ReferentProfessors)
+            $internshipDate = $contract->getInternshipDate();
+            $level = $internshipDate ? $internshipDate->getLevel() : null;
             $professors = $level ? $level->getReferentProfessors() : [];
 
             $emailsSent = 0;

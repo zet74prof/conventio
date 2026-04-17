@@ -1,53 +1,89 @@
 import { Controller } from '@hotwired/stimulus';
 
-/*
- * This controller handles adding and removing items in a Symfony CollectionType form.
- *
- * Usage in Twig:
- * <div data-controller="form-collection"
- * data-form-collection-index-value="{{ form.sessionDates|length }}"
- * data-form-collection-prototype-value="{{ form_widget(form.sessionDates.vars.prototype)|e('html_attr') }}">
- *
- * <div data-form-collection-target="collectionContainer">
- * ... existing items ...
- * </div>
- *
- * <button type="button" data-action="form-collection#addCollectionElement">Add</button>
- * </div>
- */
 export default class extends Controller {
-    static targets = ["collectionContainer"];
+    static targets = ["container", "submit"];
     static values = {
         index: Number,
         prototype: String,
     }
 
-    addCollectionElement(event) {
-        const item = document.createElement('div');
-        // Add classes for styling (matching your existing structure)
-        item.classList.add('row', 'mb-3', 'session-date-item', 'border-bottom', 'pb-3');
+    connect() {
+        this.validate();
+        // Add event listener for all inputs inside the container
+        this.containerTarget.addEventListener('input', (event) => {
+            if (event.target.type === 'date') {
+                this.validate();
+            }
+        });
+    }
 
-        // Replace '__name__' in the prototype with the current index
+    add(event) {
         const prototype = this.prototypeValue.replace(/__name__/g, this.indexValue);
-
-        // Inject the prototype HTML with a delete button
+        const item = document.createElement('div');
+        item.classList.add('card', 'mb-2', 'bg-light', 'border-0', 'form-collection-item');
+        
         item.innerHTML = `
-            <div class="col-md-10">
-                ${prototype}
-            </div>
-            <div class="col-md-2 text-end">
-                <button type="button" class="btn btn-danger btn-sm" data-action="click->form-collection#removeCollectionElement">
+            <div class="card-body p-2 d-flex gap-2 align-items-end">
+                <div class="flex-grow-1">
+                    ${prototype}
+                </div>
+                <button type="button" class="btn btn-outline-danger mb-3" data-action="form-collection#remove">
                     <i class="bi bi-trash"></i>
                 </button>
             </div>
         `;
 
-        this.collectionContainerTarget.appendChild(item);
+        this.containerTarget.appendChild(item);
         this.indexValue++;
+        this.validate();
     }
 
-    removeCollectionElement(event) {
-        // Find the closest parent row and remove it
-        event.target.closest('.session-date-item').remove();
+    remove(event) {
+        event.target.closest('.form-collection-item').remove();
+        this.validate();
+    }
+
+    validate() {
+        const items = Array.from(this.containerTarget.querySelectorAll('.form-collection-item'));
+        let dates = [];
+        let hasError = false;
+
+        // Reset previous errors
+        items.forEach(item => {
+            const inputs = item.querySelectorAll('input[type="date"]');
+            inputs.forEach(input => input.classList.remove('is-invalid'));
+        });
+
+        items.forEach((item, index) => {
+            const startDateInput = item.querySelector('input[id$="_startDate"]');
+            const endDateInput = item.querySelector('input[id$="_endDate"]');
+
+            if (startDateInput && endDateInput) {
+                const start = startDateInput.value;
+                const end = endDateInput.value;
+
+                if (start && end) {
+                    if (start >= end) {
+                        endDateInput.classList.add('is-invalid');
+                        hasError = true;
+                    }
+                    dates.push({ start, end, index, startDateInput, endDateInput });
+                }
+            }
+        });
+
+        // Check for overlaps
+        dates.sort((a, b) => a.start.localeCompare(b.start));
+
+        for (let i = 1; i < dates.length; i++) {
+            if (dates[i].start <= dates[i - 1].end) {
+                dates[i].startDateInput.classList.add('is-invalid');
+                hasError = true;
+            }
+        }
+
+        if (this.hasSubmitTarget) {
+            this.submitTarget.disabled = hasError;
+        }
     }
 }

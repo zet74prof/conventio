@@ -6,6 +6,8 @@ use App\Repository\LevelRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: LevelRepository::class)]
 class Level
@@ -22,10 +24,11 @@ class Level
     private ?string $levelName = null;
 
     /**
-     * @var Collection<int, Session>
+     * @var Collection<int, InternshipDate>
      */
-    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'level', orphanRemoval: true)]
-    private Collection $sessions;
+    #[ORM\OneToMany(targetEntity: InternshipDate::class, mappedBy: 'level', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[Assert\Valid]
+    private Collection $internshipDates;
 
     /**
      * @var Collection<int, Student>
@@ -47,7 +50,7 @@ class Level
 
     public function __construct()
     {
-        $this->sessions = new ArrayCollection();
+        $this->internshipDates = new ArrayCollection();
         $this->students = new ArrayCollection();
         $this->professors = new ArrayCollection();
         $this->referentProfessors = new ArrayCollection();
@@ -83,29 +86,29 @@ class Level
     }
 
     /**
-     * @return Collection<int, Session>
+     * @return Collection<int, InternshipDate>
      */
-    public function getSessions(): Collection
+    public function getInternshipDates(): Collection
     {
-        return $this->sessions;
+        return $this->internshipDates;
     }
 
-    public function addSession(Session $session): static
+    public function addInternshipDate(InternshipDate $internshipDate): static
     {
-        if (!$this->sessions->contains($session)) {
-            $this->sessions->add($session);
-            $session->setLevel($this);
+        if (!$this->internshipDates->contains($internshipDate)) {
+            $this->internshipDates->add($internshipDate);
+            $internshipDate->setLevel($this);
         }
 
         return $this;
     }
 
-    public function removeSession(Session $session): static
+    public function removeInternshipDate(InternshipDate $internshipDate): static
     {
-        if ($this->sessions->removeElement($session)) {
+        if ($this->internshipDates->removeElement($internshipDate)) {
             // set the owning side to null (unless already changed)
-            if ($session->getLevel() === $this) {
-                $session->setLevel(null);
+            if ($internshipDate->getLevel() === $this) {
+                $internshipDate->setLevel(null);
             }
         }
 
@@ -194,5 +197,36 @@ class Level
         }
 
         return $this;
+    }
+
+    #[Assert\Callback]
+    public function validateSequentialDates(ExecutionContextInterface $context): void
+    {
+        $dates = $this->internshipDates->toArray();
+
+        // Sort by start date to check chronological order
+        usort($dates, function(InternshipDate $a, InternshipDate $b) {
+            if (!$a->getStartDate() || !$b->getStartDate()) return 0;
+            return $a->getStartDate() <=> $b->getStartDate();
+        });
+
+        $lastEndDate = null;
+
+        foreach ($dates as $index => $internshipDate) {
+            $start = $internshipDate->getStartDate();
+            $end = $internshipDate->getEndDate();
+
+            if (!$start || !$end) continue;
+
+            if ($lastEndDate !== null) {
+                if ($start <= $lastEndDate) {
+                    $context->buildViolation('session.dates.overlap')
+                        ->atPath("internshipDates[$index].startDate")
+                        ->addViolation();
+                }
+            }
+
+            $lastEndDate = $end;
+        }
     }
 }

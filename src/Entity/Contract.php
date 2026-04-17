@@ -83,7 +83,7 @@ class Contract
 
     #[ORM\ManyToOne(inversedBy: 'contracts')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Session $session = null;
+    private ?InternshipDate $internshipDate = null;
 
     /**
      * @var Collection<int, ContractDate>
@@ -336,14 +336,14 @@ class Contract
         return $this;
     }
 
-    public function getSession(): ?Session
+    public function getInternshipDate(): ?InternshipDate
     {
-        return $this->session;
+        return $this->internshipDate;
     }
 
-    public function setSession(?Session $session): static
+    public function setInternshipDate(?InternshipDate $internshipDate): static
     {
-        $this->session = $session;
+        $this->internshipDate = $internshipDate;
 
         return $this;
     }
